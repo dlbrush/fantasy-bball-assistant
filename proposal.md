@@ -29,7 +29,7 @@ As of right now, this is the API I believe I'll be using: https://www.balldontli
   
 ### Approach
 #### **Database Schema**
-![Database schema diagram for the app](schema-preview.png)
+![Database schema diagram for the app](schema-preview.png)  
 Notes:  
 - All information about NBA teams, schedules, and player statistics will be coming from the API, so I don't need to store any of that data in my database. Player IDs in the teams_players tables will refer to the player's ID in the API (or some other identifier depending on what is the most reliable way to get player data.)
 - I'm hoping to allow the user to save data on their opponent's teams so they can quickly compare how they'll perform when they play against them. This is what I'm tracking in the opponent_teams table. These teams will have a one to many relationship with the user's own teams, since the user most likely has multiple opponents, but those opponents only play against one of the user's teams.
