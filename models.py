@@ -38,6 +38,15 @@ class User(db.Model):
         hashed_text = hashed.decode('utf8')
         return cls(username=username, password=hashed_text)
 
+    @classmethod
+    def authenticate(cls, username, password):
+        user = User.query.filter_by(username = username).first()
+
+        if user and bcrypt.check_password_hash(user.password, password):
+            return user
+        else:
+            return False
+
 class Team(db.Model):
     """
     A team associated with a user.
@@ -54,7 +63,7 @@ class Team(db.Model):
     )
 
     name = db.Column(
-        db.String
+        db.String,
         nullable = False
     )
 
@@ -87,8 +96,6 @@ class TeamPlayer(db.Model):
         db.Integer,
         primary_key = True
     )
-
-
 
 class OpponentTeam(db.Model):
     """

@@ -22,7 +22,7 @@ lebron = TeamPlayer(team_id=champs.id, player_id=237)
 opp = OpponentTeam(name='Losers', plays_against=champs.id)
 
 # Commit both so we can use the opponent ID as a foreign key
-db.session.add(lebron, opp)
+db.session.add_all([lebron, opp])
 db.session.commit()
 
 # Place a player (Hassan Whiteside) on the opponent's team and commit
