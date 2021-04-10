@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
 from forms import UserForm
@@ -31,6 +31,7 @@ def show_login_form():
         password = form.password.data
         user = User.authenticate(username=username, password=password)
         if user:
+            session['username'] = username
             return 'Logged in!'
         else:
             flash('Invalid username or password.')
@@ -47,6 +48,14 @@ def show_registration_form():
         try:
             db.session.add(new_user)
             db.session.commit()
+            session['username'] = username
+            flash('Welcome to the Fantasy Basketball Assistant! Create your first team here.')
+            return redirect(url_for('show_team_builder', username=username))
         except IntegrityError:
-            flash('Username already taken! Please enter a different username.')
+            db.session.rollback()
+            flash('Username already taken! Please try a different username.')
     return render_template('register.html', form=form)
+
+@app.route('/<username>/addteam')
+def show_team_builder(username):
+    return False
