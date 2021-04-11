@@ -21,6 +21,8 @@ def root_redirect():
     If the user is logged in already, redirect to their user hub.
     If not, redirect to the login screen.
     """
+    if 'username' in session:
+        return redirect(url_for('show_user_hub', username = session['username']))
     return redirect(url_for('show_login_form'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -32,7 +34,7 @@ def show_login_form():
         user = User.authenticate(username=username, password=password)
         if user:
             session['username'] = username
-            return 'Logged in!'
+            return redirect(url_for('show_user_hub', username = username))
         else:
             flash('Invalid username or password.')
     return render_template('login.html', form=form)
@@ -59,3 +61,18 @@ def show_registration_form():
 @app.route('/<username>/addteam')
 def show_team_builder(username):
     return False
+
+@app.route('/<username>')
+def show_user_hub(username):
+    user = User.query.get_or_404(username)
+    if 'username' in session:
+        if session['username'] == username:
+            # Get the user's teams and render the user hub
+            teams = user.teams
+            return render_template('user-hub.html', user=user, teams=teams)
+        else:
+            # Redirect to the user's own hub if they are trying to view someone else's
+            return redirect(url_for('show_user_hub', username = session['username']))
+    else:
+        # Redirect to login if the user is not logged in
+        return redirect(url_for('show_login_form'))

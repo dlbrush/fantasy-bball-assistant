@@ -1,9 +1,17 @@
-from models import db, bcrypt, User, Team, TeamPlayer, OpponentTeam, OpponentTeamPlayer
+from models import db, bcrypt, User, Team, TeamPlayer, OpponentTeam, OpponentTeamPlayer, Player
 from app import app
+from api import get_all_players
 
 # Drop all existing tables and start them from scratch.
 db.drop_all()
 db.create_all()
+
+# Seed all players
+players = get_all_players()
+for player in players:
+    new_player = Player(first_name=player['first_name'], last_name=player['last_name'], id=player['id'])
+    db.session.add(new_player)
+db.session.commit()
 
 # Register a test user and commit so we can use the username as a foreign key
 testuser = User.register(username='testuser', password='testing')
