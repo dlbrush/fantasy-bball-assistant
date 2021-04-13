@@ -1,0 +1,25 @@
+{% extends 'form.html' %}
+
+{% block title %}
+Add team
+{% endblock %}
+
+{% block overform %}
+<h1>Add a team</h1>
+{% endblock %}
+
+{% block button %}
+<div class="my-3" id="player-search">
+    <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
+    <div id="player-search-results" hidden>
+        <ul id="players"></ul>
+    </div>
+</div>
+
+<button class='btn btn-success'>Add team</button>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/playersearch.js"></script>
+<script src="/static/teambuilder.js"></script>
+{% endblock %}

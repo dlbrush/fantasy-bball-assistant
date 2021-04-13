@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
-from forms import UserForm
+from models import db, connect_db, User, Player
+from forms import UserForm, TeamBuilderForm
 from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
@@ -60,7 +60,24 @@ def show_registration_form():
 
 @app.route('/<username>/addteam')
 def show_team_builder(username):
-    return False
+    user = User.query.get_or_404(username)
+    if 'username' in session:
+        if session['username'] == username:
+            form = TeamBuilderForm()
+            if form.validate_on_submit():
+                return 'Ya did it'
+            else:
+                # Add the list of players to the form, and render the team builder 
+                players = Player.query.all()
+                choices = [(player.id, f'{player.first_name} {player.last_name}') for player in players]
+                form.players.choices = choices
+                return render_template('team-builder.html', user=user, form = form)
+        else:
+            # Redirect to the user's own hub if they are trying to view someone else's
+            return redirect(url_for('show_team_builder', username = session['username']))
+    else:
+        # Redirect to login if the user is not logged in
+        return redirect(url_for('show_login_form'))
 
 @app.route('/<username>')
 def show_user_hub(username):

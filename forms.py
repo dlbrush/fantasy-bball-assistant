@@ -15,8 +15,8 @@ class TeamBuilderForm(FlaskForm):
     Collects the name and league name for a team, and allows the user to choose the players on their team.
     Player list comes from the database and is added to the form in the flask route.
     """
-    name = StringField('Team Name', validators=[InputRequired(message='Please enter a team name.'))
+    name = StringField('Team Name', validators=[InputRequired(message='Please enter a team name.')])
 
-    league = StringField('League Name (Optional')
+    league = StringField('League Name (Optional)')
 
     players = SelectMultipleField('Players')

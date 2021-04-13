@@ -2,7 +2,7 @@ import requests
 
 base_url = 'https://www.balldontlie.io/api/v1/'
 
-def get_all_players():
+def get_all_players() -> list:
     """
     Get JSON of all player data from the API and return it as a list of dictionaries.
     """
@@ -24,3 +24,4 @@ def get_all_players():
 
     # Return the full list of player dictionaries.
     return players
+
