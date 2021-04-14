@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from api import get_all_players
 
 db = SQLAlchemy()
 
@@ -79,37 +78,6 @@ class Team(db.Model):
     )
 
     players = db.relationship('TeamPlayer', backref='team', cascade='all,delete')
-
-class Player(db.Model):
-    """
-    A player's ID and name. 
-    Used to populate player search autocomplete.
-    ID comes from the API, so is not autoincremented here.
-    """
-    __tablename__ = 'players'
-
-    id = db.Column(
-        db.Integer,
-        primary_key = True
-    )
-
-    first_name = db.Column(
-        db.String,
-        nullable = False
-    )
-
-    last_name = db.Column(
-        db.String,
-        nullable = False
-    )
-
-    @classmethod
-    def seed_players(cls):
-        players = get_all_players()
-        for player in players:
-            new_player = cls(first_name=player['first_name'], last=player['last_name'], id=player['id'])
-            db.session.add(new_player)
-        db.session.commit()
 
 class TeamPlayer(db.Model):
     """

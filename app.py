@@ -1,7 +1,8 @@
 from flask import Flask, render_template, redirect, url_for, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Player
+from models import db, connect_db, User
 from forms import UserForm, TeamBuilderForm
+from api import get_current_season_players
 from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
@@ -68,8 +69,8 @@ def show_team_builder(username):
                 return 'Ya did it'
             else:
                 # Add the list of players to the form, and render the team builder 
-                players = Player.query.all()
-                choices = [(player.id, f'{player.first_name} {player.last_name}') for player in players]
+                players = get_current_season_players()
+                choices = [(player['personId'], f"{player['firstName']} {player['lastName']}") for player in players]
                 form.players.choices = choices
                 return render_template('team-builder.html', user=user, form = form)
         else:
