@@ -1,22 +1,40 @@
-{% extends 'form.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
 Add team
 {% endblock %}
 
-{% block overform %}
+{% block content %}
 <h1>Add a team</h1>
-{% endblock %}
 
-{% block button %}
-<div class="my-3" id="player-search">
-    <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
-    <div class="shadow rounded-sm" id="player-search-results" hidden>
-        <ul id="player-list"></ul>
+<form method="POST">
+    {{form.hidden_tag()}}
+    {% for field in form if field.widget.input_type != 'hidden' %}
+        <div class="form-group">
+            {{field.label}}
+
+            {% if field == form.players %}
+                {{field(class="form-control",
+                        hidden=True)}}
+            {% else %}
+                {{field(class="form-control")}}
+            {% endif %}
+
+            {% for error in field.errors %}
+                <p class="text-danger">{{error}}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <!-- Add player search to replace multi-select input -->
+    <div class="my-3" id="player-search">
+        <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
+        <div class="shadow rounded-sm" id="player-search-results" hidden>
+            <ul id="player-list"></ul>
+        </div>
     </div>
-</div>
-
-<button class='btn btn-success'>Add team</button>
+    
+    <button class='btn btn-success'>Add team</button>
+</form>
 {% endblock %}
 
 {% block scripts %}
