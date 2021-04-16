@@ -70,11 +70,31 @@ function populateMatchedPlayerNames(matches) {
 }
 
 function handlePlayerChoice(evt) {
-    const choice = evt.target.id;
-    $(`option[value="${choice}"]`).prop('selected', true)
+    const choiceId = evt.target.id;
+    $(`option[value="${choiceId}"]`).prop('selected', true)
     $searchBar.val('')
     $playerList.empty();
     hideResults();
+    $('#team-builder-list')
+}
+
+function addPlayerToList($target, columns, playerId) {
+    $target.append(`
+        <div class="team-player col-${columns}">
+            <div class="row">
+                <div class="player-photo col-3">
+                    <img src="${getPlayerPhoto(playerId)}" />
+                </div>
+                <div class="player-info col-9">
+                    <p class="lead"
+                </div>
+            </div>
+        </div>
+    `)
+}
+
+function getPlayerPhoto(id) {
+    return `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${id}.png`
 }
 
 $searchBar.on('focusin', showResultsOnFocus);

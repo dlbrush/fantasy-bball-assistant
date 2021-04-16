@@ -6,35 +6,46 @@ Add team
 
 {% block content %}
 <h1>Add a team</h1>
-
-<form method="POST">
-    {{form.hidden_tag()}}
-    {% for field in form if field.widget.input_type != 'hidden' %}
-        <div class="form-group">
-            {{field.label}}
-
-            {% if field == form.players %}
-                {{field(class="form-control",
-                        hidden=True)}}
-            {% else %}
-                {{field(class="form-control")}}
-            {% endif %}
-
-            {% for error in field.errors %}
-                <p class="text-danger">{{error}}</p>
+<hr>
+<div class="row">
+    <div class="col-sm-5 col-xs-12 border border-info p-3 rounded-sm" id="team-builder-form">
+        <form method="POST">
+            {{form.hidden_tag()}}
+            {% for field in form if field.widget.input_type != 'hidden' %}
+                <div class="form-group">
+                    {{field.label}}
+        
+                    {% if field == form.players %}
+                        {{field(class="form-control",
+                                hidden=True)}}
+                    {% else %}
+                        {{field(class="form-control")}}
+                    {% endif %}
+        
+                    {% for error in field.errors %}
+                        <p class="text-danger">{{error}}</p>
+                    {% endfor %}
+                </div>
             {% endfor %}
-        </div>
-    {% endfor %}
-    <!-- Add player search to replace multi-select input -->
-    <div class="my-3" id="player-search">
-        <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
-        <div class="shadow rounded-sm" id="player-search-results" hidden>
-            <ul id="player-list"></ul>
+            <!-- Add player search to replace multi-select input -->
+            <div class="my-3" id="player-search">
+                <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
+                <div class="shadow rounded-sm" id="player-search-results" hidden>
+                    <ul id="player-list"></ul>
+                </div>
+            </div>
+            
+            <button class='btn btn-success'>Add team</button>
+        </form>
+    </div>
+    <div class="col-sm-7 col-xs-12" id="team-builder-view">
+        <h2>Players</h2>
+        <div class="shadow border border-danger rounded-sm row mx-1" id="team-builder-list">
+
         </div>
     </div>
-    
-    <button class='btn btn-success'>Add team</button>
-</form>
+</div>
+
 {% endblock %}
 
 {% block scripts %}

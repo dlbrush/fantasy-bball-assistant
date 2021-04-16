@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Team
 from forms import UserForm, TeamBuilderForm
 from api import get_current_season_players
 from sqlalchemy.exc import IntegrityError
@@ -59,19 +59,34 @@ def show_registration_form():
             flash('Username already taken! Please try a different username.')
     return render_template('register.html', form=form)
 
-@app.route('/<username>/addteam')
+@app.route('/<username>/addteam', methods=['GET', 'POST'])
 def show_team_builder(username):
     user = User.query.get_or_404(username)
     if 'username' in session:
         if session['username'] == username:
             form = TeamBuilderForm()
+
+            # Add the list of players to the form
+            players = get_current_season_players()
+            choices = [(player['personId'], f"{player['firstName']} {player['lastName']}") for player in players]
+            form.players.choices = choices
+
             if form.validate_on_submit():
-                return 'Ya did it'
+                #Collect form data
+                name = form.name.data
+                league = form.league.data
+                players = form.players.data
+
+                #Create a team
+                new_team = Team.create(name=name, league=league, owner=username)
+
+                #Add players to team if any were chosen
+                if players:
+                    new_team.add_players(player_ids=players)
+
+                #Redirect player back to hub to see their new team!
+                return redirect(url_for('show_user_hub', username=username))
             else:
-                # Add the list of players to the form, and render the team builder 
-                players = get_current_season_players()
-                choices = [(player['personId'], f"{player['firstName']} {player['lastName']}") for player in players]
-                form.players.choices = choices
                 return render_template('team-builder.html', user=user, form = form)
         else:
             # Redirect to the user's own hub if they are trying to view someone else's

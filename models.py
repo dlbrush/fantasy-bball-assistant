@@ -79,6 +79,22 @@ class Team(db.Model):
 
     players = db.relationship('TeamPlayer', backref='team', cascade='all,delete')
 
+    @classmethod
+    def create(cls, name, league, owner):
+        new_team = cls(name=name, league=league, owner=owner)
+        db.session.add(new_team)
+        db.session.commit()
+        return new_team
+
+    def add_players(self, player_ids):
+        """
+        Creates an association between the team and all players in the list of player IDs passed
+        """
+        for player_id in player_ids:
+            team_player = TeamPlayer(team_id=self.id, player_id=int(player_id))
+            db.session.add(team_player)
+        db.session.commit()
+
 class TeamPlayer(db.Model):
     """
     Associates a player ID with a team ID, meaning that player is on that team.
