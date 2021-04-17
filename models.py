@@ -47,6 +47,15 @@ class User(db.Model):
         else:
             return False
 
+    def serialize(self):
+        """
+        Returns dictionary of user info to send as JSON to the session.
+        """
+        return {
+            'username': self.username,
+            'teams': [team.serialize() for team in self.teams]
+        }
+
 class Team(db.Model):
     """
     A team associated with a user.
@@ -94,6 +103,15 @@ class Team(db.Model):
             team_player = TeamPlayer(team_id=self.id, player_id=int(player_id))
             db.session.add(team_player)
         db.session.commit()
+
+    def serialize(self):
+        """
+        Returns a dictionary of team info that we want to send as JSON.
+        """
+        return {
+            'name': self.name,
+            'league': self.league
+        }
 
 class TeamPlayer(db.Model):
     """

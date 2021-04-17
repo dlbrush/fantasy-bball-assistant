@@ -21,8 +21,8 @@ def root_redirect():
     If the user is logged in already, redirect to their user hub.
     If not, redirect to the login screen.
     """
-    if 'username' in session:
-        return redirect(url_for('show_user_hub', username = session['username']))
+    if 'user' in session:
+        return redirect(url_for('show_user_hub', username = session['user']['username']))
     return redirect(url_for('show_login_form'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -33,7 +33,7 @@ def show_login_form():
         password = form.password.data
         user = User.authenticate(username=username, password=password)
         if user:
-            session['username'] = username
+            session['user'] = user.serialize()
             return redirect(url_for('show_user_hub', username = username))
         else:
             flash('Invalid username or password.')
@@ -50,7 +50,7 @@ def show_registration_form():
         try:
             db.session.add(new_user)
             db.session.commit()
-            session['username'] = username
+            session['user'] = user.serialize()
             flash('Welcome to the Fantasy Basketball Assistant! Create your first team here.')
             return redirect(url_for('show_team_builder', username=username))
         except IntegrityError:
@@ -58,11 +58,19 @@ def show_registration_form():
             flash('Username already taken! Please try a different username.')
     return render_template('register.html', form=form)
 
+@app.route('/logout')
+def logout_user():
+    """
+    Remove user details from the session and return to login screen.
+    """
+    session.pop('user')
+    return redirect(url_for('show_login_form'))
+
 @app.route('/<username>/addteam', methods=['GET', 'POST'])
 def show_team_builder(username):
     user = User.query.get_or_404(username)
-    if 'username' in session:
-        if session['username'] == username:
+    if 'user' in session:
+        if session['user']['username'] == username:
             form = TeamBuilderForm()
 
             if form.validate_on_submit():
@@ -84,7 +92,7 @@ def show_team_builder(username):
                 return render_template('team-builder.html', user=user, form = form)
         else:
             # Redirect to the user's own hub if they are trying to view someone else's
-            return redirect(url_for('show_team_builder', username = session['username']))
+            return redirect(url_for('show_team_builder', username = session['user']['username']))
     else:
         # Redirect to login if the user is not logged in
         return redirect(url_for('show_login_form'))
@@ -92,14 +100,14 @@ def show_team_builder(username):
 @app.route('/<username>')
 def show_user_hub(username):
     user = User.query.get_or_404(username)
-    if 'username' in session:
-        if session['username'] == username:
+    if 'user' in session:
+        if session['user']['username'] == username:
             # Get the user's teams and render the user hub
             teams = user.teams
             return render_template('user-hub.html', user=user, teams=teams)
         else:
             # Redirect to the user's own hub if they are trying to view someone else's
-            return redirect(url_for('show_user_hub', username = session['username']))
+            return redirect(url_for('show_user_hub', username = session['user']['username']))
     else:
         # Redirect to login if the user is not logged in
         return redirect(url_for('show_login_form'))
