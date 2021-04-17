@@ -11,6 +11,7 @@ $(async function() {
     $playerList.on('click', 'li', handlePlayerChoice);
     $(document).on('mouseup', hideResultsOnClick);
     populatePlayerOptions($('#players'), players);
+    populateExistingPlayerChoices();
     $('#team-builder-list').on('click', '.remove-player', handleRemovePlayer);
 
     function showEmptyMessage() {
@@ -68,8 +69,7 @@ $(async function() {
 
     function handlePlayerChoice(evt) {
         const choiceId = evt.target.id;
-        $(`option[value="${choiceId}"]`).prop('selected', true)
-
+        addPlayerChoice(choiceId);
         const player = getPlayer(choiceId, players);
         const $block = addPlayerBlock($('#team-builder-list'), "col-6", player);
         populatePlayerInfo($block, player, true);
@@ -77,6 +77,10 @@ $(async function() {
         $searchBar.val('')
         $playerList.empty();
         hideResults();
+    }
+
+    function addPlayerChoice(choiceId) {
+        $(`option[value="${choiceId}"]`).prop('selected', true);
     }
 
     function handleRemovePlayer(evt) {
@@ -94,6 +98,14 @@ $(async function() {
                 </option>`
             );
         }
+    }
+
+    function populateExistingPlayerChoices() {
+        $('.team-player').each(function() {
+            addPlayerChoice(this.id)
+            const player = getPlayer(this.id, players);
+            populatePlayerInfo($(this), player, true);
+        })
     }
 });
 

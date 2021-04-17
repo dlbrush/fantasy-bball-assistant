@@ -27,7 +27,7 @@ class User(db.Model):
         nullable = False
     )
 
-    teams = db.relationship('Team', backref='user', cascade='all,delete')
+    teams = db.relationship('Team', backref='user', passive_deletes=True)
 
     @classmethod
     def register(cls, username, password):
@@ -78,7 +78,7 @@ class Team(db.Model):
 
     owner = db.Column(
         db.String,
-        db.ForeignKey('users.username'),
+        db.ForeignKey('users.username', ondelete="CASCADE"),
         nullable = False
     )
 
@@ -86,7 +86,7 @@ class Team(db.Model):
         db.String
     )
 
-    players = db.relationship('TeamPlayer', backref='team', cascade='all,delete')
+    players = db.relationship('TeamPlayer', backref='team', passive_deletes=True)
 
     @classmethod
     def create(cls, name, league, owner):
@@ -95,6 +95,25 @@ class Team(db.Model):
         db.session.commit()
         return new_team
 
+    def edit(self, name, league, players):
+        self.name = name
+        self.league = league
+        db.session.commit()
+        self.update_players(new_player_list=players)
+    
+    def update_players(self, new_player_list):
+        """
+        Determines which players to add or remove from the players associated with this team.
+        Add players from the list who are not already associated with this team.
+        Remove players who are not in the list but are associated with this team.
+        """
+        new_player_ints = [int(player) for player in new_player_list]
+        self_player_ids = [player.player_id for player in self.players]
+        to_add = [player for player in new_player_ints if player not in self_player_ids]
+        to_remove = [player for player in self_player_ids if player not in new_player_ints]
+        self.add_players(to_add)
+        self.remove_players(to_remove)
+
     def add_players(self, player_ids):
         """
         Creates an association between the team and all players in the list of player IDs passed
@@ -102,6 +121,14 @@ class Team(db.Model):
         for player_id in player_ids:
             team_player = TeamPlayer(team_id=self.id, player_id=int(player_id))
             db.session.add(team_player)
+        db.session.commit()
+
+    def remove_players(self, player_ids):
+        """
+        Removes association between the team and all players in the list of player IDs passed
+        """
+        for player_id in player_ids:
+            TeamPlayer.query.filter_by(team_id=self.id, player_id=player_id).delete()
         db.session.commit()
 
     def serialize(self):

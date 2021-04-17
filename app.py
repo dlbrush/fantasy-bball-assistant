@@ -133,11 +133,18 @@ def show_team(username, team_id):
 def edit_team(username, team_id):
     user = User.query.get_or_404(username)
     team = Team.query.get_or_404(team_id)
+    form = TeamBuilderForm(obj=team)
     if 'user' in session:
         if session['user']['username'] == username:
             # Check to make sure this is actually the user's team
             if team in user.teams:
-                return render_template('team-edit.html', user=user, team=team)
+                if form.validate_on_submit():
+                    name = form.name.data
+                    league = form.league.data
+                    players = request.form.getlist('players')
+                    team.edit(name=name, league=league, players=players)
+                    return redirect(url_for('show_team', username=username, team_id=team.id))
+                return render_template('team-edit.html', user=user, team=team, form=form)
             else:
                 flash('Sorry, that team does not belong to you.')
                 redirect(url_for('show_user_hub', username=username))
@@ -151,7 +158,25 @@ def edit_team(username, team_id):
 
 @app.route('/<username>/teams/<int:team_id>/delete', methods=['POST'])
 def delete_team(username, team_id):
-    return False
+    user = User.query.get_or_404(username)
+    team = Team.query.get_or_404(team_id)
+    if 'user' in session:
+        if session['user']['username'] == username:
+            # Check to make sure this is actually the user's team
+            if team in user.teams:
+                Team.query.filter_by(id=team_id).delete()
+                db.session.commit()
+                return redirect
+            else:
+                flash('Sorry, that team does not belong to you.')
+                redirect(url_for('show_user_hub', username=username))
+        else: 
+            flash('Sorry, that is not your username.')
+            redirect(url_for('show_user_hub', username=session['user']['username']))
+    else:
+        flash('Please log in first.')
+        redirect(url_for('show_login_form'))
+
 
 @app.route('/projections')
 def show_projections():

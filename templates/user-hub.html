@@ -15,7 +15,8 @@
 <div class="row my-2" id="teams">
 
     {% for team in teams %}
-        <div class="col-3">
+        <div class="my-2 col-3">
+          <a href="{{user.username}}/teams/{{team.id}}">
             <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">{{team.name}}</h5>
@@ -24,6 +25,7 @@
                   {% endif %}
                 </div>
               </div>
+            </a>
         </div>
     {% endfor %}
 

@@ -17,7 +17,9 @@
         <a href="{{url_for('edit_team', username=user.username, team_id=team['id'])}}" class="mx-2 btn btn-info btn-block">Edit Team</a>
     </div>
     <div class="team-option col-4">
-        <a href="{{url_for('delete_team', username=user.username, team_id=team['id'])}}" class="btn-block mx-2 btn btn-danger">Delete Team</a>
+        <form action="{{url_for('delete_team', username=user.username, team_id=team['id'])}}" method="POST">
+            <button class="btn-block mx-2 btn btn-danger">Delete Team</button>
+        </form>
     </div>
 </div>
 <hr>
