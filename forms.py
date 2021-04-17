@@ -18,5 +18,3 @@ class TeamBuilderForm(FlaskForm):
     name = StringField('Team Name', validators=[InputRequired(message='Please enter a team name.')])
 
     league = StringField('League Name (Optional)')
-
-    # players = SelectMultipleField('Add Players (Optional)')

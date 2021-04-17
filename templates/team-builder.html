@@ -6,7 +6,7 @@ Add team
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-5 col-xs-12 " id="team-builder-form">
+    <div class="col-md-5 col-xs-12 " id="team-builder-form">
         <h2>Add a team</h2>
         <form class="border border-info p-3 rounded-sm" method="POST">
             {{form.hidden_tag()}}
@@ -35,7 +35,7 @@ Add team
             <button class='btn btn-success'>Add team</button>
         </form>
     </div>
-    <div class="col-sm-7 col-xs-12" id="team-builder-view">
+    <div class="col-md-7 col-xs-12" id="team-builder-view">
         <h2>Players</h2>
         <div class="shadow border border-danger rounded-sm row mx-1" id="team-builder-list">
 
@@ -47,6 +47,7 @@ Add team
 
 {% block scripts %}
 <script src="/static/api.js"></script>
+<script src="/static/players.js"></script>
 <script src="/static/playersearch.js"></script>
 <script src="/static/teambuilder.js"></script>
 {% endblock %}

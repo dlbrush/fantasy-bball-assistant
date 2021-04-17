@@ -1,11 +1,10 @@
 $(async function() {
     const playerData = await getAllPlayers();
     const teamData = await getAllTeams();
-    const players = getPlayers(playerData);
+    const players = getPlayers(playerData, teamData);
     const $searchBar = $('#player-search-bar');
     const $searchResults = $('#player-search-results');
     const $playerList = $('#player-list')
-    const $playerChoices = $('select[name="players"]').children('option');
 
     $searchBar.on('focusin', showResultsOnFocus);
     $searchBar.keyup(handleSearch);
@@ -13,32 +12,6 @@ $(async function() {
     $(document).on('mouseup', hideResultsOnClick);
     populatePlayerOptions($('#players'), players);
     $('#team-builder-list').on('click', '.remove-player', handleRemovePlayer);
-
-    /**
-     * Returns an array of the player data we'll want to use on a page
-     */
-    function getPlayers(playerData) {
-        return playerData.map(player => ({
-            name: `${player.firstName} ${player.lastName}`,
-            ID: player.personId,
-            team: getTeamInitials(player.teamId),
-            position: player.pos
-        }))
-    }
-
-    function getTeamInitials(teamId) {
-        const team = teamData.find(searchTeam => searchTeam.teamId == teamId);
-        if (team) {
-            return team['tricode']
-        }
-        else {
-            return ""
-        }
-    }
-
-    function getPlayer(playerId) {
-        return players.find(player => player['ID'] === playerId)
-    }
 
     function showEmptyMessage() {
         $playerList.empty();
@@ -97,29 +70,13 @@ $(async function() {
         const choiceId = evt.target.id;
         $(`option[value="${choiceId}"]`).prop('selected', true)
 
-        const player = getPlayer(choiceId);
-        addPlayerToList($('#team-builder-list'), 6, player);
+        const player = getPlayer(choiceId, players);
+        const $block = addPlayerBlock($('#team-builder-list'), "col-6", player);
+        populatePlayerInfo($block, player, true);
 
         $searchBar.val('')
         $playerList.empty();
         hideResults();
-    }
-
-    function addPlayerToList($target, columns, player) {
-        $target.append(`
-            <div id="${player.ID}" class="team-player col-${columns} shadow-sm py-2 border border-black">
-                <div class="row">
-                    <div class="player-photo col-3">
-                        <img src="${getPlayerPhoto(player.ID)}" class="img-fluid"></img>
-                    </div>
-                    <div class="player-info col-9">
-                        <p class="lead my-0">${player.name}</p>
-                        <p class="my-0">${player.position} ${player.team}</p>
-                        <a class="text-danger remove-player">Remove</a> 
-                    </div>
-                </div>
-            </div>
-        `)
     }
 
     function handleRemovePlayer(evt) {
@@ -127,10 +84,6 @@ $(async function() {
         const playerId = $teamPlayer.attr('id');
         $(`option[value="${playerId}"]`).prop('selected', false);
         $teamPlayer.remove();
-    }
-
-    function getPlayerPhoto(id) {
-        return `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${id}.png`
     }
 
     function populatePlayerOptions($target, players) {

@@ -66,6 +66,21 @@ def logout_user():
     session.pop('user')
     return redirect(url_for('show_login_form'))
 
+@app.route('/<username>')
+def show_user_hub(username):
+    user = User.query.get_or_404(username)
+    if 'user' in session:
+        if session['user']['username'] == username:
+            # Get the user's teams and render the user hub
+            teams = user.teams
+            return render_template('user-hub.html', user=user, teams=teams)
+        else:
+            # Redirect to the user's own hub if they are trying to view someone else's
+            return redirect(url_for('show_user_hub', username = session['user']['username']))
+    else:
+        # Redirect to login if the user is not logged in
+        return redirect(url_for('show_login_form'))
+
 @app.route('/<username>/addteam', methods=['GET', 'POST'])
 def show_team_builder(username):
     user = User.query.get_or_404(username)
@@ -86,8 +101,8 @@ def show_team_builder(username):
                 if players:
                     new_team.add_players(player_ids=players)
 
-                #Redirect player back to hub to see their new team!
-                return redirect(url_for('show_user_hub', username=username))
+                #Redirect player to the new page for their team!
+                return redirect(url_for('show_team', username=username, team_id=new_team.id))
             else:
                 return render_template('team-builder.html', user=user, form = form)
         else:
@@ -97,17 +112,48 @@ def show_team_builder(username):
         # Redirect to login if the user is not logged in
         return redirect(url_for('show_login_form'))
 
-@app.route('/<username>')
-def show_user_hub(username):
+@app.route('/<username>/teams/<int:team_id>')
+def show_team(username, team_id):
+    """
+    Show team page.
+    This page shows all the players on a team and allows the user to access projections, edit the team, or delete the team.
+    """
     user = User.query.get_or_404(username)
+    team = Team.query.get_or_404(team_id)
     if 'user' in session:
         if session['user']['username'] == username:
-            # Get the user's teams and render the user hub
-            teams = user.teams
-            return render_template('user-hub.html', user=user, teams=teams)
-        else:
-            # Redirect to the user's own hub if they are trying to view someone else's
-            return redirect(url_for('show_user_hub', username = session['user']['username']))
+            # Check to make sure this is actually the user's team
+            if team in user.teams:
+                return render_template('team-view.html', user=user, team=team)
+            else:
+                flash('Sorry, that team does not belong to you.')
+                redirect(url_for('show_user_hub', username=username))
+
+@app.route('/<username>/teams/<int:team_id>/edit', methods=['GET', 'POST'])
+def edit_team(username, team_id):
+    user = User.query.get_or_404(username)
+    team = Team.query.get_or_404(team_id)
+    if 'user' in session:
+        if session['user']['username'] == username:
+            # Check to make sure this is actually the user's team
+            if team in user.teams:
+                return render_template('team-edit.html', user=user, team=team)
+            else:
+                flash('Sorry, that team does not belong to you.')
+                redirect(url_for('show_user_hub', username=username))
+        else: 
+            flash('Sorry, that is not your username.')
+            redirect(url_for('show_user_hub', username=session['user']['username']))
     else:
-        # Redirect to login if the user is not logged in
-        return redirect(url_for('show_login_form'))
+        flash('Please log in first.')
+        redirect(url_for('show_login_form'))
+    
+
+@app.route('/<username>/teams/<int:team_id>/delete', methods=['POST'])
+def delete_team(username, team_id):
+    return False
+
+@app.route('/projections')
+def show_projections():
+    return False
+

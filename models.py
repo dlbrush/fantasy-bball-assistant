@@ -109,6 +109,7 @@ class Team(db.Model):
         Returns a dictionary of team info that we want to send as JSON.
         """
         return {
+            'id': self.id,
             'name': self.name,
             'league': self.league
         }
