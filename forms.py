@@ -19,4 +19,4 @@ class TeamBuilderForm(FlaskForm):
 
     league = StringField('League Name (Optional)')
 
-    players = SelectMultipleField('Add Players (Optional)')
+    # players = SelectMultipleField('Add Players (Optional)')

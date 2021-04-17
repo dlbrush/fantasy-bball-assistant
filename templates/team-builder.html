@@ -5,28 +5,25 @@ Add team
 {% endblock %}
 
 {% block content %}
-<h1>Add a team</h1>
-<hr>
 <div class="row">
-    <div class="col-sm-5 col-xs-12 border border-info p-3 rounded-sm" id="team-builder-form">
-        <form method="POST">
+    <div class="col-sm-5 col-xs-12 " id="team-builder-form">
+        <h2>Add a team</h2>
+        <form class="border border-info p-3 rounded-sm" method="POST">
             {{form.hidden_tag()}}
             {% for field in form if field.widget.input_type != 'hidden' %}
                 <div class="form-group">
                     {{field.label}}
-        
-                    {% if field == form.players %}
-                        {{field(class="form-control",
-                                hidden=True)}}
-                    {% else %}
-                        {{field(class="form-control")}}
-                    {% endif %}
-        
+                    {{field(class="form-control")}}
                     {% for error in field.errors %}
                         <p class="text-danger">{{error}}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
+            <div class="form-group">
+                <label for="players">Add Players</label>
+                <select class="form-control" id="players" name="players" multiple hidden>
+                </select>
+            </div>
             <!-- Add player search to replace multi-select input -->
             <div class="my-3" id="player-search">
                 <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
@@ -49,6 +46,7 @@ Add team
 {% endblock %}
 
 {% block scripts %}
+<script src="/static/api.js"></script>
 <script src="/static/playersearch.js"></script>
 <script src="/static/teambuilder.js"></script>
 {% endblock %}

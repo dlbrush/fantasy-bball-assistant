@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, session
+from flask import Flask, render_template, redirect, url_for, flash, session, request
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Team
 from forms import UserForm, TeamBuilderForm
@@ -67,15 +67,16 @@ def show_team_builder(username):
             form = TeamBuilderForm()
 
             # Add the list of players to the form
-            players = get_current_season_players()
-            choices = [(player['personId'], f"{player['firstName']} {player['lastName']}") for player in players]
-            form.players.choices = choices
+            # players = get_current_season_players()
+            # choices = [(player['personId'], f"{player['firstName']} {player['lastName']}") for player in players]
+            # form.players.choices = choices
 
             if form.validate_on_submit():
                 #Collect form data
                 name = form.name.data
                 league = form.league.data
-                players = form.players.data
+                form2 = request.form
+                players = request.form.getlist('players')
 
                 #Create a team
                 new_team = Team.create(name=name, league=league, owner=username)

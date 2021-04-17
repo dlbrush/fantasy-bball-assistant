@@ -1,3 +1,15 @@
 #team-builder-list {
     height: 100%;
+    overflow: scroll;
+}
+
+#player-search-results {
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    z-index: 4;
+}
+
+.player-choice:hover {
+    background-color: orange;
 }
