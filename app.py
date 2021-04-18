@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, session, request
+from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Team
 from forms import UserForm, TeamBuilderForm
@@ -14,6 +14,8 @@ app.config["SECRET_KEY"] = "giannis4MVP"
 connect_db(app)
 
 toolbar = DebugToolbarExtension(app)
+
+categories = [('fgp', 'FG%'), ('ftp', 'FT%'), ('tpm', '3PM'), ('rpg','REB'), ('apg', 'AST'), ('spg', 'STL'), ('bpg', 'BLK'), ('topg', 'TOS'), ('ppg', 'PTS')]
 
 @app.route('/')
 def root_redirect():
@@ -179,7 +181,7 @@ def delete_team(username, team_id):
 
 
 @app.route('/<username>/teams/<int:team_id>/projections')
-def show_projections():
+def show_projections(username, team_id):
     user = User.query.get_or_404(username)
     team = Team.query.get_or_404(team_id)
     if 'user' in session:
@@ -187,9 +189,9 @@ def show_projections():
             # Check to make sure this is actually the user's team
             if team in user.teams:
                 teams = user.teams
-                if not teams.players:
+                if not team.players:
                     flash('Please edit this team and add players to see projections.')
-                return render_template('team-projections.html', user=user, team=team, teams=teams)
+                return render_template('team-projections.html', user=user, team=team, teams=teams, cats=categories)
             else:
                 flash('Sorry, that team does not belong to you.')
                 return redirect(url_for('show_user_hub', username=username))
@@ -200,4 +202,14 @@ def show_projections():
         flash('Please log in first.')
         return redirect(url_for('show_login_form'))
 
+@app.route('/data/<username>/teams')
+def get_user_teams(username):
+    user = User.query.get_or_404(username)
+    teams = [team.serialize() for team in user.teams]
+    return jsonify(teams=teams)
 
+@app.route('/data/teams/<int:team_id>/players')
+def get_team_players(team_id):
+    team = Team.query.get_or_404(team_id)
+    players = [player.player_id for player in team.players]
+    return jsonify(players=players)

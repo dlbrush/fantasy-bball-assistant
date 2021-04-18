@@ -3,3 +3,45 @@
 {% block title %}
 Weekly Projections
 {% endblock %}
+
+{% block content %}
+<h2>Weekly projections for {{team.name}}</h1>
+<h3>{{team.league}}</h3>
+<hr>
+<h4 class="text-center">Total Projections</h4>
+<div class="row" id="total-projections">
+    <div class="col-5" id="user-total-container">
+        <h5>{{team.name}}</h5>
+        <table class="table" id="user-total">
+            <thead>
+                <th>Category</th>
+                <th>Total</th>
+            </thead>
+            <tbody>
+                {% for cat in cats %}
+                    <tr class="{{cat[0]}}-row">
+                        <th class="cat-name">{{cat[1]}}</th>
+                        <td class="cat-team-total" id="user-{{cat[0]}}-total"></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2 align-self-center">
+        <h2 class="text-center">VS.</h2>
+    </div>
+</div>
+
+<table class="table" id="player-grid">
+    <thead>
+
+    </thead>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/api.js"></script>
+<script src="/static/players.js"></script>
+<script src="/static/stats.js"></script>
+<script src="/static/projections.js"></script>
+{% endblock%}

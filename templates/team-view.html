@@ -11,7 +11,7 @@
     {% endif %}
 <div class="row" id="team-options">
     <div class="team-option col-4">
-        <a href="{{url_for('show_projections', team_id=team['id'])}}" class="mx-2 btn btn-block btn-success">Team Projections</a>
+        <a href="{{url_for('show_projections', team_id=team['id'], username=user.username)}}" class="mx-2 btn btn-block btn-success">Team Projections</a>
     </div>
     <div class="team-option col-4">
         <a href="{{url_for('edit_team', username=user.username, team_id=team['id'])}}" class="mx-2 btn btn-info btn-block">Edit Team</a>

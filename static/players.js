@@ -30,7 +30,7 @@ function getPlayers(playerData, teamData) {
     return playerData.map(player => ({
         name: `${player.firstName} ${player.lastName}`,
         ID: player.personId,
-        team: getTeamInitials(player.teamId, teamData),
+        team: getTeamData(player.teamId, teamData).initials,
         position: player.pos
     }))
 }
@@ -43,12 +43,14 @@ function getPlayerPhoto(id) {
     return `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${id}.png`
 }
 
-function getTeamInitials(teamId, teamData) {
-    const team = teamData.find(searchTeam => searchTeam.teamId == teamId);
-    if (team) {
-        return team['tricode']
+function getTeamData(teamId, teamData) {
+    const team = getTeam(teamId, teamData);
+    return {
+        initials: (team ? team['teamSitesOnly']['teamTricode'] : ""),
+        code: (team ? team['teamSitesOnly']['teamTricode'] : "")
     }
-    else {
-        return ""
-    }
+}
+
+function getTeam(teamId, teamData) {
+    return teamData.find(searchTeam => searchTeam.teamId == teamId);
 }
