@@ -166,7 +166,7 @@ def delete_team(username, team_id):
             if team in user.teams:
                 Team.query.filter_by(id=team_id).delete()
                 db.session.commit()
-                return redirect
+                return redirect(url_for('show_user_hub', username=username))
             else:
                 flash('Sorry, that team does not belong to you.')
                 redirect(url_for('show_user_hub', username=username))

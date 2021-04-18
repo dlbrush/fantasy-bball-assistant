@@ -150,7 +150,7 @@ class TeamPlayer(db.Model):
 
     team_id = db.Column(
         db.Integer,
-        db.ForeignKey('teams.id'),
+        db.ForeignKey('teams.id', ondelete="CASCADE"),
         primary_key = True
     )
 
@@ -176,7 +176,7 @@ class OpponentTeam(db.Model):
 
     plays_against = db.Column(
         db.Integer,
-        db.ForeignKey('teams.id'),
+        db.ForeignKey('teams.id', ondelete="CASCADE"),
         nullable = False
     )
 
@@ -185,7 +185,7 @@ class OpponentTeam(db.Model):
         nullable = False
     )
 
-    players = db.relationship('OpponentTeamPlayer', backref='team', cascade='all,delete')
+    players = db.relationship('OpponentTeamPlayer', backref='team', passive_deletes=True)
 
 class OpponentTeamPlayer(db.Model):
     """
@@ -197,7 +197,7 @@ class OpponentTeamPlayer(db.Model):
 
     opp_team_id = db.Column(
         db.Integer,
-        db.ForeignKey('opponent_teams.id'),
+        db.ForeignKey('opponent_teams.id', ondelete="CASCADE"),
         primary_key = True
     )
 
