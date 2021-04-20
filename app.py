@@ -15,7 +15,7 @@ connect_db(app)
 
 toolbar = DebugToolbarExtension(app)
 
-categories = [('fgp', 'FG%'), ('ftp', 'FT%'), ('tpm', '3PM'), ('rpg','REB'), ('apg', 'AST'), ('spg', 'STL'), ('bpg', 'BLK'), ('topg', 'TOS'), ('ppg', 'PTS')]
+categories = [('gp', 'GAMES'), ('fgp', 'FG%'), ('ftp', 'FT%'), ('tpg', '3PM'), ('rpg','REB'), ('apg', 'AST'), ('spg', 'STL'), ('bpg', 'BLK'), ('topg', 'TOS'), ('ppg', 'PTS')]
 
 @app.route('/')
 def root_redirect():
@@ -209,7 +209,7 @@ def get_user_teams(username):
     return jsonify(teams=teams)
 
 @app.route('/data/teams/<int:team_id>/players')
-def get_team_players(team_id):
+def get_user_team_players(team_id):
     team = Team.query.get_or_404(team_id)
     players = [player.player_id for player in team.players]
     return jsonify(players=players)

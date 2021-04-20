@@ -21,9 +21,15 @@ async function getTeamSchedule(teamCode) {
 }
 
 //Returns an object of per-game average stats for the current year
-async function getPlayerPerGame(teamId) {
-    response = await axios.get(`http://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players/${teamId}_profile.json`);
+async function getPlayerSeasonStats(playerId) {
+    response = await axios.get(`http://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players/${playerId}_profile.json`);
     return response.data['league']['standard']['stats']['latest']
+}
+
+//Returns an array of the player IDs associated with a fantasy team in the database
+async function getUserTeamPlayerIds(teamId) {
+    response = await axios.get(`/data/teams/${teamId}/players`);
+    return response.data['players']
 }
 
 /**
@@ -42,4 +48,14 @@ function getCurrentSeason() {
     } else {
         return year
     }
+}
+
+/**
+ * Returns the team ID for the current URL path based on the location of the 'teams' segment of the path.
+ * The Team ID should always be located directly after this segment.
+ */
+function getTeamIDFromURL(url) {
+    const segments = url.split('/');
+    const teamSegmentIndex = segments.findIndex(seg => seg === 'teams');
+    return segments[teamSegmentIndex + 1]
 }

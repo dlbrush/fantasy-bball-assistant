@@ -11,17 +11,17 @@ Weekly Projections
 <h4 class="text-center">Total Projections</h4>
 <div class="row" id="total-projections">
     <div class="col-5" id="user-total-container">
-        <h5>{{team.name}}</h5>
-        <table class="table" id="user-total">
+        <h5 class="text-center">{{team.name}}</h5>
+        <table class="table table-striped table-bordered table-sm" id="user-totals">
             <thead>
-                <th>Category</th>
-                <th>Total</th>
+                <th class="text-center">Category</th>
+                <th class="text-center">Projected Total</th>
             </thead>
             <tbody>
                 {% for cat in cats %}
                     <tr class="{{cat[0]}}-row">
-                        <th class="cat-name">{{cat[1]}}</th>
-                        <td class="cat-team-total" id="user-{{cat[0]}}-total"></td>
+                        <th class="cat-name text-center">{{cat[1]}}</th>
+                        <td class="cat-user-total text-center" id="user-{{cat[0]}}-total"></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -30,12 +30,46 @@ Weekly Projections
     <div class="col-2 align-self-center">
         <h2 class="text-center">VS.</h2>
     </div>
+    <div class="col-5" id="opp-total-container">
+        <h5 class="text-center">Opponent</h5>
+        <table class="table table-striped table-bordered table-sm" id="opp-totals">
+            <thead>
+                <th class="text-center">Category</th>
+                <th class="text-center">Projected Total</th>
+            </thead>
+            <tbody>
+                {% for cat in cats %}
+                    <tr class="{{cat[0]}}-row">
+                        <th class="cat-name text-center">{{cat[1]}}</th>
+                        <td class="cat-opp-total text-center" id="opp-{{cat[0]}}-total"></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<table class="table" id="player-grid">
-    <thead>
+<hr>
 
+<h4 class="text-center">Player Projections</h4>
+
+<table class="table table-striped table-bordered" id="player-totals">
+    <thead>
+        <th class="text-center">Player</th>
+        {% for cat in cats %}
+            <th class="cat-name text-center">{{cat[1]}}</th>
+        {% endfor %}
     </thead>
+    <tbody>
+        {% for player in team.players %}
+            <tr id="player-{{player.player_id}}-row">
+                <th class="player-row-head" id="player-{{player.player_id}}-head"></th>
+                {% for cat in cats %}
+                    <td class="cat-{{player.player_id}}-total text-center" id='{{player.player_id}}-{{cat[0]}}-total'></td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}
 
@@ -43,5 +77,6 @@ Weekly Projections
 <script src="/static/api.js"></script>
 <script src="/static/players.js"></script>
 <script src="/static/stats.js"></script>
+<script src="/static/schedule.js"></script>
 <script src="/static/projections.js"></script>
 {% endblock%}

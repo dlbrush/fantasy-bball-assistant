@@ -31,12 +31,13 @@ function getPlayers(playerData, teamData) {
         name: `${player.firstName} ${player.lastName}`,
         ID: player.personId,
         team: getTeamData(player.teamId, teamData).initials,
+        teamId: player.teamId,
         position: player.pos
     }))
 }
 
 function getPlayer(playerId, players) {
-    return players.find(player => player['ID'] === playerId)
+    return players.find(player => player['ID'] == playerId)
 }
 
 function getPlayerPhoto(id) {

@@ -13,3 +13,8 @@
 .player-choice:hover {
     background-color: orange;
 }
+
+.player-row-head {
+    font-size: 0.5em;
+    max-height: 50px;
+}
