@@ -29,6 +29,21 @@
         </div>
     {% endfor %}
 </div>
+<div class="row justify-content-center my-2">
+    <div class="col-12 justify-content-center">
+        <h4 class="text-center">Opposing Teams</h4>
+        <a href="{{url_for('show_opp_team_builder', team_id=team.id)}}" class="my-2 d-block col-4 mx-auto text-center btn btn-success" id="add-opp-team">Add opposing team</a>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="list-group">
+            {% for opp in opponents %}
+                <a href="{{url_for('show_opp_team', team_id=team.id, opp_team_id=opp.id)}}" class="list-group-item list-group-item-action">{{opp.name}}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
 
 {% block scripts %}

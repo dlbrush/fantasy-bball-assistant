@@ -18,3 +18,23 @@
     font-size: 0.5em;
     max-height: 50px;
 }
+
+.grid-view-active {
+    background-color: rgb(255, 219, 122);
+}
+
+.grid-hidden {
+    display: none;
+}
+
+.grid-show {
+    display: block;
+}
+
+.container-hidden {
+    display: none;
+}
+
+.container-show {
+    display: block;
+}

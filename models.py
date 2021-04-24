@@ -88,6 +88,8 @@ class Team(db.Model):
 
     players = db.relationship('TeamPlayer', backref='team', passive_deletes=True)
 
+    opponents = db.relationship('OpponentTeam', passive_deletes=True)
+
     @classmethod
     def create(cls, name, league, owner):
         new_team = cls(name=name, league=league, owner=owner)
@@ -186,6 +188,57 @@ class OpponentTeam(db.Model):
     )
 
     players = db.relationship('OpponentTeamPlayer', backref='team', passive_deletes=True)
+
+    @classmethod
+    def create(cls, name, plays_against):
+        new_opp_team = cls(name=name, plays_against=plays_against)
+        db.session.add(new_opp_team)
+        db.session.commit()
+        return new_opp_team
+
+    def edit(self, name, players):
+        self.name = name
+        db.session.commit()
+        self.update_players(new_player_list=players)
+
+    def update_players(self, new_player_list):
+        """
+        Determines which players to add or remove from the players associated with this team.
+        Add players from the list who are not already associated with this team.
+        Remove players who are not in the list but are associated with this team.
+        """
+        new_player_ints = [int(player) for player in new_player_list]
+        self_player_ids = [player.player_id for player in self.players]
+        to_add = [player for player in new_player_ints if player not in self_player_ids]
+        to_remove = [player for player in self_player_ids if player not in new_player_ints]
+        self.add_players(to_add)
+        self.remove_players(to_remove)
+
+    def add_players(self, player_ids):
+        """
+        Creates an association between the team and all players in the list of player IDs passed
+        """
+        for player_id in player_ids:
+            team_player = OpponentTeamPlayer(opp_team_id=self.id, player_id=int(player_id))
+            db.session.add(team_player)
+        db.session.commit()
+
+    def remove_players(self, player_ids):
+        """
+        Removes association between the team and all players in the list of player IDs passed
+        """
+        for player_id in player_ids:
+            OpponentTeamPlayer.query.filter_by(opp_team_id=self.id, player_id=player_id).delete()
+        db.session.commit()
+
+    def serialize(self):
+        """
+        Returns a dictionary of team info that we want to send as JSON.
+        """
+        return {
+            'id': self.id,
+            'name': self.name
+        }
 
 class OpponentTeamPlayer(db.Model):
     """

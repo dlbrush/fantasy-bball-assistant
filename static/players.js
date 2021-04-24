@@ -7,20 +7,21 @@ function addPlayerBlock($target, bsColumns, player) {
     return $block
 }
 
-function populatePlayerInfo($target, player, removable) {
+function populatePlayerInfo($targets, player, removable) {
     const remove = (removable ? '<a class="text-danger remove-player">Remove</a>' : '');
-    $target.append(`
-        <div class="row">
-            <div class="player-photo col-3">
-                <img src="${getPlayerPhoto(player.ID)}" class="img-fluid"></img>
+    $targets.each(function(i) {
+        $(this).append(`
+            <div class="row">
+                <div class="player-photo col-3">
+                    <img src="${getPlayerPhoto(player.ID)}" class="img-fluid"></img>
+                </div>
+                <div class="player-info col-9">
+                    <p class="lead my-0">${player.name}</p>
+                    <p class="my-0">${player.position} ${player.team}</p>
+                    ${remove} 
+                </div>
             </div>
-            <div class="player-info col-9">
-                <p class="lead my-0">${player.name}</p>
-                <p class="my-0">${player.position} ${player.team}</p>
-                ${remove} 
-            </div>
-        </div>
-    `);
+        `)});
 }
 
 /**

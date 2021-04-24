@@ -1,4 +1,31 @@
-const CATEGORIES = ['ppg', 'rpg', 'apg', 'spg', 'bpg', 'topg', 'tpg', 'fgmpg', 'fgapg', 'ftmpg', 'ftapg', 'fgp', 'ftp'];  
+const CATEGORIES = ['gp', 'fgp', 'ftp', 'tpg', 'rpg', 'apg', 'spg', 'bpg', 'topg', 'ppg'];  
+
+async function getTeamProjections(teamPlayers, date, targetName, teamData) {
+    //Fill totals
+    const totals = await getTeamTotals(teamPlayers, date);
+    const totalCells = Array.from(document.querySelectorAll(`.cat-${targetName}-total`));
+    mapStatsToTable(totalCells, totals);
+
+    //Map stats for the target's players
+    const playerStatsBody = document.querySelector(`#${targetName}-player-grid-stats-body`)
+    const playerScheduleBody = document.querySelector(`#${targetName}-player-grid-schedule-body`)
+    clearChildren(playerStatsBody);
+    clearChildren(playerScheduleBody);
+    teamPlayers.forEach(player => {
+        createPlayerStatRow(playerStatsBody, player);
+        createPlayerScheduleRow(playerScheduleBody, player, date);
+        populatePlayerInfo($(`.player-${player.ID}-head`), player, false);
+        populateGameCells(player, date, teamData);
+    });
+    const allPlayerTotals = await Promise.all(teamPlayers.map(async function(player) {
+        const playerTotals = await getPlayerTotals(player, date);
+        return playerTotals;
+    }));
+    allPlayerTotals.forEach(playerTotals => {
+        const playerTotalCells = Array.from(document.querySelectorAll(`.cat-${playerTotals.ID}-total`));
+        mapStatsToTable(playerTotalCells, playerTotals);
+    });
+}
 
 async function getTeamTotals(players, date) {
     const playersToProject = await Promise.all(players.map(async function(player) {
@@ -63,9 +90,48 @@ function getFantasyStats(seasonStats) {
 
 function mapStatsToTable(cells, stats) {
     for (let stat in stats) {
-        const target = cells.find(cell => cell.id.includes(`-${stat}`));
-        if (target) {
-            target.innerText = stats[stat];
-        }
+
+        const targets = cells.filter(cell => cell.id.includes(`-${stat}`));
+
+        targets.forEach(target => {
+            // Currently removing game adjustment feature to get to MVP
+            // if (stat === 'gp' && target.classList.contains('player-stat')) {
+            //     renderGamesInput(target, stats[stat], stats.ID);
+            // } else {
+                target.innerText = stats[stat];
+            // }
+        });
+        
+
     }
+}
+
+function createPlayerStatRow(table, player) {
+
+    const row = document.createElement('tr');
+    row.id = `player-${player.ID}-row`;
+
+    const head = document.createElement('th');
+    head.classList.add('player-row-head', `player-${player.ID}-head`);
+    row.append(head);
+
+    for (let cat of CATEGORIES) {
+        const cell = document.createElement('td');
+        cell.classList.add('player-stat', `cat-${player.ID}-total`, 'text-center');
+        cell.id = `${player.ID}-${cat}-total`;
+        row.append(cell);
+    }
+
+    table.append(row);
+}
+
+function renderGamesInput(target, numGames, playerId) {
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.value = numGames;
+    input.min = 0;
+    input.max = 7;
+    input.className = ('form-control player-gp-input')
+    input.id = `${playerId}-gp-input`
+    target.append(input);
 }

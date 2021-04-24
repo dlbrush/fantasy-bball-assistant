@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit {{opp_team.name}}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5 col-xs-12 " id="team-builder-form">
+        <h2>Edit team</h2>
+        <form class="border border-info p-3 rounded-sm" method="POST">
+            {{form.hidden_tag()}}
+            {% for field in form if field.widget.input_type != 'hidden' %}
+                <div class="form-group">
+                    {{field.label}}
+                    {{field(class="form-control")}}
+                    {% for error in field.errors %}
+                        <p class="text-danger">{{error}}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="players">Add Players</label>
+                <select class="form-control" id="players" name="players" multiple hidden>
+                </select>
+            </div>
+            <!-- Add player search to replace multi-select input -->
+            <div class="my-3" id="player-search">
+                <input class="form-control" type="text" id="player-search-bar" placeholder="Search for players">
+                <div class="shadow rounded-sm" id="player-search-results" hidden>
+                    <ul id="player-list"></ul>
+                </div>
+            </div>
+            
+            <button class='btn btn-success'>Update team</button>
+        </form>
+    </div>
+    <div class="col-md-7 col-xs-12" id="team-builder-view">
+        <h2>Players</h2>
+        <div class="shadow border border-danger rounded-sm row mx-1" id="team-builder-list">
+            {% if team.players %}
+                {% for player in opp_team.players %}
+                    <div id="{{player.player_id}}" class="team-player col-6 shadow-sm py-2 border border-black">  
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/api.js"></script>
+<script src="/static/players.js"></script>
+<script src="/static/playersearch.js"></script>
+<script src="/static/teambuilder.js"></script>
+{% endblock %}

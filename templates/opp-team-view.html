@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{opp_team.name}}
+{% endblock %}
+
+{% block content %}
+<h1>{{opp_team.name}}</h1>
+<div class="row justify-content-center" id="team-options">
+    <div class="team-option col-4">
+        <a href="{{url_for('edit_opp_team', opp_team_id=opp_team.id, team_id=team['id'])}}" class="mx-2 btn btn-info btn-block">Edit Team</a>
+    </div>
+    <div class="team-option col-4">
+        <form action="{{url_for('delete_opp_team', opp_team_id=opp_team.id, team_id=team['id'])}}" method="POST">
+            <button class="btn-block mx-2 btn btn-danger">Delete Team</button>
+        </form>
+    </div>
+</div>
+<hr>
+<div class="row shadow-sm border border-info" id="player-grid">
+    {% for player in opp_team.players %}
+        <div id="{{player.player_id}}" class="team-player col-12 col-sm-6 col-md-3 shadow-sm py-2 border border-black">  
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/api.js"></script>
+<script src="/static/players.js"></script>
+<script src="/static/opp-team-view.js"></script>
+{% endblock %}

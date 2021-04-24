@@ -32,22 +32,9 @@ async function getUserTeamPlayerIds(teamId) {
     return response.data['players']
 }
 
-/**
- * getCurrentSeason returns the current season based on the date.
- * Seasons start around September or October and end in May or June.
- * Seasons are identified by the year they start in.
- * So, if it's September or later, return the current year as the season.
- * If it's before September, we're still in the season identified by the previous year.
- */
-function getCurrentSeason() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    if (month < 8) {
-        return year - 1
-    } else {
-        return year
-    }
+async function getOpponentData(oppTeamId) {
+    response = await axios.get(`/data/oppteams/${oppTeamId}`);
+    return response.data
 }
 
 /**
@@ -58,4 +45,22 @@ function getTeamIDFromURL(url) {
     const segments = url.split('/');
     const teamSegmentIndex = segments.findIndex(seg => seg === 'teams');
     return segments[teamSegmentIndex + 1]
+}
+
+/**
+ * getCurrentSeason returns the current season based on the date.
+ * Seasons start around September or October and end in May or June.
+ * Seasons are identified by the year they start in.
+ * So, if it's September or later, return the current year as the season.
+ * If it's before September, we're still in the season identified by the previous year.
+ */
+ function getCurrentSeason() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    if (month < 8) {
+        return year - 1
+    } else {
+        return year
+    }
 }
