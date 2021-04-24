@@ -1,27 +1,61 @@
-function addPlayerBlock($target, bsColumns, player) {
-    const $block = $(`
-        <div id="${player.ID}" class="team-player ${bsColumns} shadow-sm py-2 border border-black">  
-        </div>
-    `);
-    $target.append($block);
-    return $block
+function addPlayerBlock(target, bsColumns, player) {
+    // const $block = $(`
+    //     <div id="${player.ID}" class="team-player ${bsColumns} shadow-sm py-2 border border-black">  
+    //     </div>
+    // `);
+    const block = document.createElement('div');
+    block.id = `block-${player.ID}`
+    block.classList.add('team-player', bsColumns, 'shadow-sm', 'py-2', 'border', 'border-black');
+    target.append(block);
+    return block;
 }
 
-function populatePlayerInfo($targets, player, removable) {
-    const remove = (removable ? '<a class="text-danger remove-player">Remove</a>' : '');
-    $targets.each(function(i) {
-        $(this).append(`
-            <div class="row">
-                <div class="player-photo col-3">
-                    <img src="${getPlayerPhoto(player.ID)}" class="img-fluid"></img>
-                </div>
-                <div class="player-info col-9">
-                    <p class="lead my-0">${player.name}</p>
-                    <p class="my-0">${player.position} ${player.team}</p>
-                    ${remove} 
-                </div>
-            </div>
-        `)});
+//REMINDER - this used to take multiple inputs, so that might break in some places
+function populatePlayerInfo(target, player, removable) {
+    // const remove = (removable ? '<a class="text-danger remove-player">Remove</a>' : '');
+    // $targets.each(function(i) {
+    //     $(this).append(`
+    //         <div class="row">
+    //             <div class="player-photo col-3">
+    //                 <img src="${getPlayerPhoto(player.ID)}" class="img-fluid"></img>
+    //             </div>
+    //             <div class="player-info col-9">
+    //                 <p class="lead my-0">${player.name}</p>
+    //                 <p class="my-0">${player.position} ${player.team}</p>
+    //                 ${remove} 
+    //             </div>
+    //         </div>
+    //     `)});
+        const row = document.createElement('div');
+        row.classList.add('row');
+
+        const photoColumn = document.createElement('div');
+        photoColumn.classList.add('player-photo', 'col-3');
+
+        const photo = document.createElement('img');
+        photo.classList.add('img-fluid');
+        photo.src = this.getPlayerPhoto(player.ID);
+        photoColumn.append(photo);
+
+        const infoColumn = document.createElement('div');
+        infoColumn.classList.add('player-info', 'col-9');
+        const name = document.createElement('p');
+        name.classList.add('lead', 'my-0');
+        name.innerText = player.name;
+        const info = document.createElement('p');
+        info.classList.add('my-0');
+        info.innerText = `${player.position} ${player.team}`;
+        infoColumn.append(name, info);
+        if (removable) {
+            const remove = document.createElement('a');
+            remove.classList.add('text-danger', 'remove-player');
+            remove.id = `remove-${player.ID}`;
+            remove.innerText = 'Remove';
+            infoColumn.append(remove);
+        }
+
+        row.append(photoColumn, infoColumn);
+        target.append(row);
 }
 
 /**

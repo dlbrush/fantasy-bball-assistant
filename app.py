@@ -322,6 +322,17 @@ def delete_opp_team(opp_team_id, team_id):
         flash('Please log in first.')
         return redirect(url_for('show_login_form'))
 
+@app.route('/trade-analyzer')
+def show_trade_analyzer():
+    #Check that user is logged in
+    if 'user' in session:
+        user = User.query.get(session['user']['username'])
+        teams = user.teams
+        return render_template('trade-analyzer.html', user=user, teams=teams)
+    else:
+        flash('Please log in first.')
+        return redirect(url_for('show_login_form'))
+
 @app.route('/data/<username>/teams')
 def get_user_teams(username):
     user = User.query.get_or_404(username)

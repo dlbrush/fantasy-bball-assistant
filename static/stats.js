@@ -14,7 +14,7 @@ async function getTeamProjections(teamPlayers, date, targetName, teamData) {
     teamPlayers.forEach(player => {
         createPlayerStatRow(playerStatsBody, player);
         createPlayerScheduleRow(playerScheduleBody, player, date);
-        populatePlayerInfo($(`.player-${player.ID}-head`), player, false);
+        populatePlayerInfo(document.querySelectorAll(`.player-${player.ID}-head`), player, false);
         populateGameCells(player, date, teamData);
     });
     const allPlayerTotals = await Promise.all(teamPlayers.map(async function(player) {

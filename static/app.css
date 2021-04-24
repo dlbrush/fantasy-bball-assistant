@@ -38,3 +38,11 @@
 .container-show {
     display: block;
 }
+
+.hide {
+    display:none;
+}
+
+.trade-list {
+    min-height: 200px;
+}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+FB Trade Assistant
+{% endblock %}
+
+{% block content %}
+<h1>Trade Analyzer</h1>
+<hr>
+
+<div class="row" id="trade-staging">
+    <div class="col-md-5 col-12" id="user-player-staging">
+        <div class="my-3" id="user-player-search">
+            <input class="form-control player-search-bar" type="text" id="user-player-search-bar" placeholder="Search for players">
+            <div class="shadow rounded-sm" id="user-player-search-results" hidden>
+                <ul class="player-list" id="user-player-list"></ul>
+            </div>
+        </div>
+        <div class="shadow border rounded-sm row mx-1 trade-list" id="user-team-trade-list">
+        </div>
+    </div>
+    <div class="col-md-2 col-12 align-self-center" id="trade-for">
+        <h2 class="text-center">FOR</h2>
+    </div>
+    <div class="col-md-5 col-12" id="opp-player-staging">
+        <div class="my-3" id="opp-player-search">
+            <input class="form-control player-search-bar" type="text" id="opp-player-search-bar" placeholder="Search for players">
+            <div class="shadow rounded-sm" id="user-player-search-results" hidden>
+                <ul class="player-list" id="opp-player-list"></ul>
+            </div>
+        </div>
+        <div class="shadow border rounded-sm row mx-1 trade-list" id="opp-team-trade-list">
+        </div>
+    </div>
+</div>
+<button class="btn btn-success d-block mx-auto my-4 col-12">Analyze Trade</button>
+<h3>Trade Results</h3>
+{% endblock %}
