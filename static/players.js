@@ -1,8 +1,4 @@
 function addPlayerBlock(target, bsColumns, player) {
-    // const $block = $(`
-    //     <div id="${player.ID}" class="team-player ${bsColumns} shadow-sm py-2 border border-black">  
-    //     </div>
-    // `);
     const block = document.createElement('div');
     block.id = `block-${player.ID}`
     block.classList.add('team-player', bsColumns, 'shadow-sm', 'py-2', 'border', 'border-black');
@@ -12,20 +8,6 @@ function addPlayerBlock(target, bsColumns, player) {
 
 //REMINDER - this used to take multiple inputs, so that might break in some places
 function populatePlayerInfo(target, player, removable) {
-    // const remove = (removable ? '<a class="text-danger remove-player">Remove</a>' : '');
-    // $targets.each(function(i) {
-    //     $(this).append(`
-    //         <div class="row">
-    //             <div class="player-photo col-3">
-    //                 <img src="${getPlayerPhoto(player.ID)}" class="img-fluid"></img>
-    //             </div>
-    //             <div class="player-info col-9">
-    //                 <p class="lead my-0">${player.name}</p>
-    //                 <p class="my-0">${player.position} ${player.team}</p>
-    //                 ${remove} 
-    //             </div>
-    //         </div>
-    //     `)});
         const row = document.createElement('div');
         row.classList.add('row');
 
