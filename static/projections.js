@@ -16,9 +16,13 @@ document.addEventListener("DOMContentLoaded", async function() {
     //Get projections for the user's team
     await getTeamProjections(userTeamPlayers, today, 'user', teamData);
 
-    //Add view switch functionality
-    const viewSwitch = document.querySelector('#view-switch')
-    viewSwitch.addEventListener('click', switchGridView);
+    //Add grid switch functionality
+    const gridSwitch = document.querySelector('#view-switch');
+    gridSwitch.addEventListener('click', switchGridView);
+
+    //Add team switch functionality
+    const teamSwitch = document.querySelector('#team-switch');
+    teamSwitch.addEventListener('click', switchTeamView);
 
     //Add opponent choice functionality
     const oppSelect = document.querySelector('#opponent-team-select');
@@ -39,15 +43,47 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
         
         //Toggle the active tag for both children of the switch
-        const choices = viewSwitch.children
+        const choices = gridSwitch.children
         for (let choice of choices) {
             choice.classList.toggle('grid-view-active');
+        }
+    }
+
+    function switchTeamView(evt) {
+        //First, return nothing if the targeted view is already active
+        if (evt.target.classList.contains('team-view-active')) {
+            return
+        } 
+        
+        //Toggle the container view for both containers
+        const containers = document.querySelectorAll('.player-grid-container')
+        for (let container of containers) {
+            container.classList.toggle('container-show');
+            container.classList.toggle('container-hidden');
+        }
+
+        //For the newly visible container, show the player stat view and hide the schedule
+        const visibleContainer = document.querySelector('.container-show');
+        visibleContainer.querySelector('.grid-stats').classList.add('grid-show');
+        visibleContainer.querySelector('.grid-stats').classList.remove('grid-hidden');
+        visibleContainer.querySelector('.grid-schedule').classList.add('grid-hidden');
+        visibleContainer.querySelector('.grid-schedule').classList.remove('grid-show');
+
+        //Set the grid switch so the stat view is active
+        gridSwitch.querySelector('#view-stats').classList.add('grid-view-active');
+        gridSwitch.querySelector('#view-schedule').classList.remove('grid-view-active');
+        
+        //Toggle the active tag for both children of the team switch
+        const choices = teamSwitch.children
+        for (let choice of choices) {
+            choice.classList.toggle('team-view-active');
         }
     }
 
     async function onOpponentChoice(evt) {
         const oppId = parseInt(evt.target.value);
         if (oppId) {
+            document.querySelector('#team-switch').classList.remove('hide');
             const oppData = await getOpponentData(oppId);
 
             document.querySelector('#opponent-name').innerText = oppData.name;

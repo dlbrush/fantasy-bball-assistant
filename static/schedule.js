@@ -10,7 +10,7 @@ async function getNumGamesForWeek(player, date) {
     return games.length
 }
 
-async function populateGameCells(player, date, teamData) {
+async function populateGameCells(player, date, teamData, table) {
     const games = await getGamesForWeek(player, date);
     console.log(games);
     const week = getWeekFromDate(date);
@@ -18,7 +18,7 @@ async function populateGameCells(player, date, teamData) {
     scheduleWeek.forEach((scheduleDay, dayNum) => {
         const scheduledGame = games.find(game => game.homeStartDate === scheduleDay);
         if (scheduledGame) {
-            const gameCell = document.querySelector(`#player-${player.ID}-day-${dayNum}`);
+            const gameCell = table.querySelector(`#player-${player.ID}-day-${dayNum}`);
             const opponent = (scheduledGame.isHomeTeam ? 
                     getTeamData(scheduledGame.vTeam.teamId, teamData).initials :
                     '@' + getTeamData(scheduledGame.hTeam.teamId, teamData).initials 

@@ -23,6 +23,10 @@
     background-color: rgb(255, 219, 122);
 }
 
+.team-view-active {
+    background-color: rgb(255, 219, 122);
+}
+
 .grid-hidden {
     display: none;
 }
