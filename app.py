@@ -328,7 +328,7 @@ def show_trade_analyzer():
     if 'user' in session:
         user = User.query.get(session['user']['username'])
         teams = user.teams
-        return render_template('trade-analyzer.html', user=user, teams=teams)
+        return render_template('trade-analyzer.html', user=user, teams=teams, cats=categories)
     else:
         flash('Please log in first.')
         return redirect(url_for('show_login_form'))

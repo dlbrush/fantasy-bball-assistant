@@ -1,6 +1,6 @@
 class playerSearch {
 
-    constructor(searchBar, results, playerList, container, players, targetList, playerSelect) {
+    constructor(searchBar, results, playerList, container, players, targetList, targetColumns, playerSelect) {
         this.searchBar = searchBar;
         this.results = results;
         this.playerList = playerList;
@@ -8,6 +8,7 @@ class playerSearch {
         this.elements = [this.searchBar, this.results, this.playerList, this.container];
         this.targetList = targetList;
         this.playerSelect = playerSelect;
+        this.targetColumns = targetColumns;
 
         this.players = players;
 
@@ -90,7 +91,7 @@ class playerSearch {
             const choiceId = evt.target.id;
             this.addPlayerChoice(choiceId);
             const player = getPlayer(choiceId, this.players);
-            const block = addPlayerBlock(this.targetList, "col-6", player);
+            const block = addPlayerBlock(this.targetList, `col-${this.targetColumns}`, player);
             populatePlayerInfo(block, player, true);
     
             this.searchBar.value = '';
@@ -100,7 +101,7 @@ class playerSearch {
     }
 
     addPlayerChoice(choiceId) {
-        const option = document.querySelector(`option[value="${choiceId}"]`);
+        const option = this.playerSelect.querySelector(`option[value="${choiceId}"]`);
         option.setAttribute('selected', true);
     }
 
