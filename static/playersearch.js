@@ -11,6 +11,7 @@ class playerSearch {
         this.targetColumns = targetColumns;
 
         this.players = players;
+        this.selectedPlayers = new Set();
 
         this.showResultsOnFocus = this.showResultsOnFocus.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -67,7 +68,9 @@ class playerSearch {
     }
 
     getMatchedPlayers(term) {
-        return this.players.filter(player => this.matchPlayerName(term, player))
+        return this.players.filter(player => {
+            return this.matchPlayerName(term, player) && !this.selectedPlayers.has(player.ID);
+        })
     }
 
     matchPlayerName(term, player) {
@@ -89,6 +92,11 @@ class playerSearch {
     handlePlayerChoice(evt) {
         if (evt.target.tagName === 'LI') {
             const choiceId = evt.target.id;
+            //If the user has already selected the player with this ID, return and do nothing else
+            if (this.selectedPlayers.has(choiceId)) {
+                return
+            }
+            this.selectedPlayers.add(choiceId)
             this.addPlayerChoice(choiceId);
             const player = getPlayer(choiceId, this.players);
             const block = addPlayerBlock(this.targetList, `col-${this.targetColumns}`, player);
@@ -112,6 +120,7 @@ class playerSearch {
             playerBlock.remove();
             const option = document.querySelector(`option[value="${playerId}"]`);
             option.removeAttribute('selected');
+            this.selectedPlayers.delete(playerId);
         }
     }
 
@@ -130,9 +139,33 @@ class playerSearch {
         playerBlocks.forEach(function(block) {
             const playerId = block.id.substr(6);
             searchInstance.addPlayerChoice(playerId);
+            searchInstance.selectedPlayers.add(playerId);
             const player = getPlayer(playerId, searchInstance.players);
             populatePlayerInfo(block, player, true);
         });
     }
 
+}
+
+class singleChoicePlayerSearch extends playerSearch {
+    constructor(searchBar, results, playerList, container, players, targetList, playerSelect) {
+        super(searchBar, results, playerList, container, players, targetList, 12, playerSelect)
+    }
+
+    handlePlayerChoice(evt) {
+        if (evt.target.tagName === 'LI') {
+            const choiceId = evt.target.id;
+            this.selectedPlayers.clear();
+            this.selectedPlayers.add(choiceId);
+            this.playerSelect.value = choiceId;
+            const player = getPlayer(choiceId, this.players);
+            const block = this.targetList.querySelector('.player-block');
+            clearChildren(block);
+            populatePlayerInfo(block, player, false);
+    
+            this.searchBar.value = '';
+            clearChildren(this.playerList);
+            this.hideResults();
+        }
+    }
 }

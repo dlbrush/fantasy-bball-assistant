@@ -9,7 +9,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///fantasy_bball_assistant"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
 app.config["SECRET_KEY"] = "giannis4MVP"
-# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
 
@@ -103,6 +103,9 @@ def show_team_builder(username):
                 #Add players to team if any were chosen
                 if players:
                     new_team.add_players(player_ids=players)
+
+                #Update session with current user so we can see the new team in the nav
+                session['user'] = user.serialize()
 
                 #Redirect player to the new page for their team!
                 return redirect(url_for('show_team', username=username, team_id=new_team.id))
@@ -329,6 +332,17 @@ def show_trade_analyzer():
         user = User.query.get(session['user']['username'])
         teams = user.teams
         return render_template('trade-analyzer.html', user=user, teams=teams, cats=categories)
+    else:
+        flash('Please log in first.')
+        return redirect(url_for('show_login_form'))
+
+@app.route('/pickup-analyzer')
+def show_pickup_analyzer():
+    #Check that user is logged in
+    if 'user' in session:
+        user = User.query.get(session['user']['username'])
+        teams = user.teams
+        return render_template('pickup-analyzer.html', user=user, teams=teams, cats=categories)
     else:
         flash('Please log in first.')
         return redirect(url_for('show_login_form'))

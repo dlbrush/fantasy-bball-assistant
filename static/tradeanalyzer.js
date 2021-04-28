@@ -25,11 +25,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     const analyzeButton = document.querySelector('#analyze-trade');
     analyzeButton.addEventListener('click', analyzeTrade);
 
-    /**
-     * 1. Get per-game stats for each player on each side of trade
-     * 2. Fill stats and totals
-     * 3. Show comparison
-     */
     async function analyzeTrade() {
         document.querySelector('#trade-results').classList.remove('hide');
         const userOptions = Array.from(userPlayerSelect.options);
@@ -37,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const userTradeStats = await analyzeTradeSide(userOptions, 'user', today, players);
         const oppTradeStats = await analyzeTradeSide(oppOptions, 'opp', today, players);
-        const tradeResults = getTradeResults(userTradeStats, oppTradeStats);
+        const tradeResults = getComparison(userTradeStats, oppTradeStats);
         const diffCells = Array.from(document.querySelectorAll('.cat-diff'));
         mapDifferences(diffCells, tradeResults);
     }

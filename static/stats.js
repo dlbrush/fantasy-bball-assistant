@@ -61,10 +61,27 @@ async function analyzeTradeSide(playerOptions, target, date, players) {
     return playerTotals
 }
 
-function getTradeResults(givingStats, receivingStats) {
+function getComparison(givingStats, receivingStats) {
     const results = {};
+    if (!givingStats) {
+        for (let stat in receivingStats) {
+            receivingStats[stat] = 0;
+        }
+    } else if (!receivingStats) {
+        for (let stat in givingStats) {
+            givingStats[stat] = 0;
+        }
+    }
     for (let stat in givingStats) {
         results[stat] = roundToTenth(receivingStats[stat] - givingStats[stat]);
+    }
+    return results;
+}
+
+function addStats(stats1, stats2) {
+    let results = {};
+    for (let stat in stats1) {
+        results[stat] = roundToTenth(stats1[stat] + stats2[stat]);
     }
     return results;
 }
@@ -147,6 +164,25 @@ function mapStatsToTable(cells, stats) {
     }
 }
 
+function addDiffToTable(cells, diff) {
+    for (let stat in diff) {
+
+        const targets = cells.filter(cell => cell.id.includes(`-${stat}`));
+
+        targets.forEach(target => {
+            const diffSpan = document.createElement('span');
+            if (diff[stat] > 0) {
+                diffSpan.classList.add('text-success');
+                diffSpan.innerText = ` (+${diff[stat]})`
+            } else {
+                diffSpan.classList.add('text-danger');
+                diffSpan.innerText = ` (${diff[stat]})`;
+            }
+            target.append(diffSpan);
+        });
+    }
+}
+
 function mapDifferences(cells, results) {
     for (let stat in results) {
         const target = cells.find(cell => cell.id.includes(`-${stat}`));
@@ -161,10 +197,17 @@ function mapDifferences(cells, results) {
     }
 }
 
-function createPlayerStatRow(table, player, includeGames) {
+function createPlayerStatRow(table, player, includeGames, rowTitle) {
 
     const row = document.createElement('tr');
     row.id = `player-${player.ID}-row`;
+
+    if (rowTitle) {
+        const title = document.createElement('th');
+        title.classList.add('player-row-title', 'text-center');
+        title.innerText = rowTitle;
+        row.append(title);
+    }
 
     const head = document.createElement('th');
     head.classList.add('player-row-head', `player-${player.ID}-head`);
@@ -196,6 +239,34 @@ function createTotalStatRow(table, target, includeGames) {
             const cell = document.createElement('td');
             cell.classList.add(`${target}-total-stat`, `cat-total`, 'text-center');
             cell.id = `${target}-${cat}-total`;
+            row.append(cell);
+        }
+    }
+
+    table.append(row);
+    return row;
+}
+
+function createDiffStatRow(table, target, includeGames, leadingCells) {
+    const row = document.createElement('tr');
+    row.classList.add('stat-diff-row', 'text-center');
+
+    const head = document.createElement('th')
+    head.classList.add('stat-total-row-head');
+    head.innerText = 'CHANGE';
+    row.append(head);
+
+    //Leading cells are empty, just to create space where we don't have something to diff
+    for (let x = 0; x < leadingCells; x++) {
+        const leadingCell = document.createElement('td');
+        row.append(leadingCell);
+    }
+
+    for (let cat of CATEGORIES) {
+        if (cat != 'gp' || (cat === 'gp' && includeGames)){
+            const cell = document.createElement('td');
+            cell.classList.add('cat-diff', 'text-center');
+            cell.id = `${target}-${cat}-diff`;
             row.append(cell);
         }
     }

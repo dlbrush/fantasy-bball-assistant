@@ -26,6 +26,7 @@ Weekly Projections
                 {% endfor %}
             </tbody>
         </table>
+        <a href="{{url_for('show_projections', username=user.username, team_id=team.id)}}" class="btn btn-info" id="edit-opp-team">Edit team</a>
     </div>
     <div class="col-2 align-self-center">
         <h2 class="text-center">VS.</h2>

@@ -2,6 +2,8 @@ async function getGamesForWeek(player, date) {
     const week = getWeekFromDate(date);
     const weekForSchedule = week.map(day => formatDateForSchedule(day));
     const teamSchedule = await getTeamSchedule(player.teamId);
+    console.log(weekForSchedule);
+    console.log(teamSchedule);
     return teamSchedule.filter(game => weekForSchedule.find(weekdate => game.homeStartDate === weekdate))
 }
 
@@ -10,9 +12,17 @@ async function getNumGamesForWeek(player, date) {
     return games.length
 }
 
+async function getNumWeekGamesRemaining(player, date) {
+    const games = await getGamesForWeek(player, date);
+    const week = getWeekFromDate(date);
+    const remainingWeek = week.filter(day => day > date)
+    const remainingWeekForSchedule = remainingWeek.map(day => formatDateForSchedule(day))
+    const remainingGames = games.filter(game => remainingWeekForSchedule.find(weekdate => game.homeStartDate === weekdate));
+    return remainingGames.length
+}
+
 async function populateGameCells(player, date, teamData, table) {
     const games = await getGamesForWeek(player, date);
-    console.log(games);
     const week = getWeekFromDate(date);
     const scheduleWeek = week.map(day => formatDateForSchedule(day));
     scheduleWeek.forEach((scheduleDay, dayNum) => {
@@ -92,7 +102,7 @@ function getTwoDigitMonth(date) {
 function getTwoDigitDate(date) {
     let numDate = date.getDate().toString();
     if (numDate.length < 2) {
-        numDate = "0" + date;
+        numDate = "0" + numDate;
     }
     return numDate
 }
