@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     //Get the date and populate the date in the schedule
     const today = new Date();
     populateScheduleCells(today);
+    document.querySelector('#pick-date').valueAsNumber = Date.now();
 
     //Get projections for the user's team
     await getTeamProjections(userTeamPlayers, today, 'user', teamData);
@@ -27,6 +28,10 @@ document.addEventListener("DOMContentLoaded", async function() {
     //Add opponent choice functionality
     const oppSelect = document.querySelector('#opponent-team-select');
     oppSelect.addEventListener('change', onOpponentChoice);
+
+    //Add date choice functionality
+    const dateSelect = document.querySelector('#pick-date');
+    dateSelect.addEventListener('change', projectFromDate);
 
     function switchGridView(evt) {
         //First, return nothing if the targeted view is already active
@@ -84,13 +89,22 @@ document.addEventListener("DOMContentLoaded", async function() {
         const oppId = parseInt(evt.target.value);
         if (oppId) {
             document.querySelector('#team-switch').classList.remove('hide');
-            const oppData = await getOpponentData(oppId);
+            await getOpponentProjection(oppId, userTeamId, players, teamData, today);
+            // const oppData = await getOpponentData(oppId);
 
-            document.querySelector('#opponent-name').innerText = oppData.name;
-            document.querySelector('#edit-opp-team').setAttribute('href', `/teams/${userTeamId}/opponents/${oppId}/edit`);
-            const oppTeamPlayerIds = oppData.players;
-            const oppTeamPlayers = oppTeamPlayerIds.map(id => getPlayer(id, players));
-            await getTeamProjections(oppTeamPlayers, today, 'opp', teamData)
+            // document.querySelector('#opponent-name').innerText = oppData.name;
+            // document.querySelector('#edit-opp-team').setAttribute('href', `/teams/${userTeamId}/opponents/${oppId}/edit`);
+            // const oppTeamPlayerIds = oppData.players;
+            // const oppTeamPlayers = oppTeamPlayerIds.map(id => getPlayer(id, players));
+            // await getTeamProjections(oppTeamPlayers, today, 'opp', teamData)
+        }
+    }
+
+    async function projectFromDate(evt) {
+        const date = new Date(evt.target.value);
+        await getTeamProjections(userTeamPlayers, date, 'user', teamData);
+        if (oppSelect.value) {
+            await getOpponentProjection(oppSelect.value, userTeamId, players, teamData, date);
         }
     }
 })

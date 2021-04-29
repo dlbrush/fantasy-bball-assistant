@@ -9,6 +9,9 @@ Weekly Projections
 <h3>{{team.league}}</h3>
 <hr>
 <h4 class="text-center">Total Projections</h4>
+<div class="text-center my-1">
+    Projecting for the week of: <input type="date" id="pick-date"/>
+</div>
 <div class="row" id="total-projections">
     <div class="col-5" id="user-total-container">
         <h5 class="text-center">{{team.name}}</h5>
@@ -68,11 +71,11 @@ Weekly Projections
     <!-- HIDING FOR MVP WITHOUT PROJECTION UPDATES -->
     <!-- <button class="mx-auto btn btn-success" id="update-projections">Update all projections</button> -->
 </div>
-<div class="container d-flex m-1 justify-content-center" id="team-switch">
+<div class="row m-1 justify-content-center hide" id="team-switch">
     <span class="p-2 border border-black team-view team-view-active" id="view-user">Your Team</span>
     <span class="p-2 border bolder-black team-view" id="view-opp">Opposing Team</span>
 </div>
-<div class="container d-flex m-1 justify-content-center" id="view-switch">
+<div class="row m-1 justify-content-center" id="view-switch">
     <span class="p-2 border border-black grid-view grid-view-active" id="view-stats">View Stats</span>
     <span class="p-2 border bolder-black grid-view" id="view-schedule">View Schedule</span>
 </div>
@@ -93,7 +96,7 @@ Weekly Projections
     </div>
     <div class="table-responsive grid-schedule grid-hidden" id="user-player-grid-schedule">
         <div class="col-auto">
-            <table class="table table-striped table-bordered" id="user-player-schedule">
+            <table class="table table-striped table-bordered table-sm" id="user-player-schedule">
                 <thead>
                     <th class="text-center">Player</th>
                     {% for day in days %}
@@ -110,7 +113,7 @@ Weekly Projections
 
 <div class="player-grid-container container-hidden" id="opp-player-grid-container">
     <div class="table-responsive grid-show grid-stats" id="opp-player-grid-stats">
-        <table class="table table-striped table-bordered" id="opp-player-totals">
+        <table class="table table-striped table-bordered table-sm" id="opp-player-totals">
             <thead>
                 <th class="text-center">Player</th>
                 {% for cat in cats %}
@@ -122,7 +125,7 @@ Weekly Projections
         </table>
     </div>
     <div class="table-responsive grid-hidden grid-schedule" id="opp-player-grid-schedule">
-        <table class="table table-striped table-bordered" id="opp-player-schedule">
+        <table class="table table-striped table-bordered table-sm" id="opp-player-schedule">
             <thead>
                 <th class="text-center">Player</th>
                 {% for day in days %}

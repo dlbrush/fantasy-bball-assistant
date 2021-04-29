@@ -26,6 +26,17 @@ async function getTeamProjections(teamPlayers, date, targetName, teamData) {
         const playerTotalCells = Array.from(document.querySelectorAll(`.cat-${playerTotals.ID}-total`));
         mapStatsToTable(playerTotalCells, playerTotals);
     });
+    return allPlayerTotals
+}
+
+async function getOpponentProjection(oppTeamId, userTeamId, players, teamData, date) {
+
+    const oppData = await getOpponentData(oppTeamId);
+    document.querySelector('#opponent-name').innerText = oppData.name;
+    document.querySelector('#edit-opp-team').setAttribute('href', `/teams/${userTeamId}/opponents/${oppTeamId}/edit`);
+    const oppTeamPlayerIds = oppData.players;
+    const oppTeamPlayers = oppTeamPlayerIds.map(id => getPlayer(id, players));
+    await getTeamProjections(oppTeamPlayers, date, 'opp', teamData);
 }
 
 async function analyzeTradeSide(playerOptions, target, date, players) {
@@ -56,20 +67,40 @@ async function analyzeTradeSide(playerOptions, target, date, players) {
 
     const playerTotals = await getTeamTotals(selectedPlayers, date, 1);
     const totalRow = createTotalStatRow(statsBody, target, false);
-    const totalCells = Array.from(totalRow.children)
-    mapStatsToTable(totalCells, playerTotals)
+    const totalCells = Array.from(totalRow.children);
+    mapStatsToTable(totalCells, playerTotals);
     return playerTotals
+}
+
+async function analyzePickupSide(playerId, players, actionString, perGameBody, weeklyBody, date) {
+    const player = getPlayer(playerId, players);
+    createPlayerStatRow(perGameBody, player, false, actionString);
+    populatePlayerInfo(perGameBody.querySelector(`.player-${player.ID}-head`), player, false);
+    const perGameStats = await getPlayerTotals(player, date, 1);
+    const perGameCells = Array.from(perGameBody.querySelectorAll(`.cat-${player.ID}-total`));
+    mapStatsToTable(perGameCells, perGameStats);
+
+    const playerGamesRemaining = await getNumWeekGamesRemaining(player, date);
+    const weekStats = await getPlayerTotals(player, date, playerGamesRemaining);
+    createPlayerStatRow(weeklyBody, player, true, actionString);
+    populatePlayerInfo(weeklyBody.querySelector(`.player-${player.ID}-head`), player, false);
+    const weekCells = Array.from(weeklyBody.querySelectorAll(`.cat-${player.ID}-total`));
+    mapStatsToTable(weekCells, weekStats);
+
+    return {perGameStats, weekStats}
 }
 
 function getComparison(givingStats, receivingStats) {
     const results = {};
     if (!givingStats) {
+        givingStats = {};
         for (let stat in receivingStats) {
-            receivingStats[stat] = 0;
+            givingStats[stat] = 0;
         }
     } else if (!receivingStats) {
+        receivingStats = {};
         for (let stat in givingStats) {
-            givingStats[stat] = 0;
+            receivingStats[stat] = 0;
         }
     }
     for (let stat in givingStats) {

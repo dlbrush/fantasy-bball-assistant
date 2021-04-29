@@ -2,8 +2,6 @@ async function getGamesForWeek(player, date) {
     const week = getWeekFromDate(date);
     const weekForSchedule = week.map(day => formatDateForSchedule(day));
     const teamSchedule = await getTeamSchedule(player.teamId);
-    console.log(weekForSchedule);
-    console.log(teamSchedule);
     return teamSchedule.filter(game => weekForSchedule.find(weekdate => game.homeStartDate === weekdate))
 }
 
