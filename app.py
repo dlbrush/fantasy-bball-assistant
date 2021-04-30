@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
+from sqlalchemy.exc import IntegrityError
+
 from models import db, connect_db, User, Team, OpponentTeam
 from forms import UserForm, TeamBuilderForm, OppTeamBuilderForm
-from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///fantasy_bball_assistant"
@@ -25,7 +26,7 @@ def root_redirect():
     If not, redirect to the login screen.
     """
     if 'user' in session:
-        return redirect(url_for('show_user_hub', username = session['user']['username']))
+        return redirect(url_for('show_user_hub', username=session['user']['username']))
     return redirect(url_for('show_login_form'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -71,6 +72,8 @@ def logout_user():
 
 @app.route('/<username>')
 def show_user_hub(username):
+    print('the user accessing this is: ' + username)
+    # print(User.query.all())
     user = User.query.get_or_404(username)
     if 'user' in session:
         if session['user']['username'] == username:
