@@ -51,10 +51,6 @@ class User(db.Model):
         """
         Returns dictionary of user info to send as JSON to the session.
         """
-        # user = {'username': self.username, 'teams':[]}
-        # if self.teams:
-        #     user['teams'] = [team.serialize() for team in self.teams]
-        # return user
         return {
             'username': self.username,
             'teams': [team.serialize() for team in self.teams]

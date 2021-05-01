@@ -10,7 +10,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///fantasy_bball_assistant"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
 app.config["SECRET_KEY"] = "giannis4MVP"
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
 
@@ -31,6 +31,12 @@ def root_redirect():
 
 @app.route('/login', methods=['GET', 'POST'])
 def show_login_form():
+    """
+    If the user isn't already logged in, show them the login form.
+    On successful login, redirect to the user hub.
+    """
+    if 'user' in session:
+        return redirect(url_for('show_user_hub', username=session['user']['username']))
     form = UserForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -45,6 +51,10 @@ def show_login_form():
 
 @app.route('/register', methods=['GET', 'POST'])
 def show_registration_form():
+    """
+    Show the user the form to register a new user.
+    On successful submission, take them to the team builder.
+    """
     form = UserForm()
     error = None
     if form.validate_on_submit():
@@ -54,7 +64,7 @@ def show_registration_form():
         try:
             db.session.add(new_user)
             db.session.commit()
-            session['user'] = user.serialize()
+            session['user'] = new_user.serialize()
             flash('Welcome to the Fantasy Basketball Assistant! Create your first team here.')
             return redirect(url_for('show_team_builder', username=username))
         except IntegrityError:
@@ -67,13 +77,12 @@ def logout_user():
     """
     Remove user details from the session and return to login screen.
     """
-    session.pop('user')
+    if 'user' in session:
+        session.pop('user')
     return redirect(url_for('show_login_form'))
 
 @app.route('/<username>')
 def show_user_hub(username):
-    print('the user accessing this is: ' + username)
-    # print(User.query.all())
     user = User.query.get_or_404(username)
     if 'user' in session:
         if session['user']['username'] == username:
@@ -89,6 +98,10 @@ def show_user_hub(username):
 
 @app.route('/<username>/addteam', methods=['GET', 'POST'])
 def show_team_builder(username):
+    """
+    If user is logged in as the user in the route, show the team builder.
+    Otherwise, redirect to their user hub or the login form.
+    """
     user = User.query.get_or_404(username)
     if 'user' in session:
         if session['user']['username'] == username:
@@ -115,7 +128,7 @@ def show_team_builder(username):
             else:
                 return render_template('team-builder.html', user=user, form = form)
         else:
-            # Redirect to the user's own hub if they are trying to view someone else's
+            # Redirect to the user's own team builder if they are logged in as a different user
             return redirect(url_for('show_team_builder', username = session['user']['username']))
     else:
         # Redirect to login if the user is not logged in
@@ -147,6 +160,10 @@ def show_team(username, team_id):
 
 @app.route('/<username>/teams/<int:team_id>/edit', methods=['GET', 'POST'])
 def edit_team(username, team_id):
+    """
+    If the user is logged in and the team in the route is one of the user's teams, allow the user to edit their team.
+    If not, redirect to their hub or the login screen.
+    """
     user = User.query.get_or_404(username)
     team = Team.query.get_or_404(team_id)
     form = TeamBuilderForm(obj=team)
@@ -159,6 +176,7 @@ def edit_team(username, team_id):
                     league = form.league.data
                     players = request.form.getlist('players')
                     team.edit(name=name, league=league, players=players)
+                    session['user'] = user.serialize()
                     return redirect(url_for('show_team', username=username, team_id=team.id))
                 return render_template('team-edit.html', user=user, team=team, form=form)
             else:
@@ -174,6 +192,9 @@ def edit_team(username, team_id):
 
 @app.route('/<username>/teams/<int:team_id>/delete', methods=['POST'])
 def delete_team(username, team_id):
+    """
+    If the user is logged in and the team in the route belongs to them, delete the team.
+    """
     user = User.query.get_or_404(username)
     team = Team.query.get_or_404(team_id)
     if 'user' in session:
@@ -182,6 +203,7 @@ def delete_team(username, team_id):
             if team in user.teams:
                 Team.query.filter_by(id=team_id).delete()
                 db.session.commit()
+                session['user'] = user.serialize()
                 return redirect(url_for('show_user_hub', username=username))
             else:
                 flash('Sorry, that team does not belong to you.')
@@ -196,6 +218,9 @@ def delete_team(username, team_id):
 
 @app.route('/<username>/teams/<int:team_id>/projections')
 def show_projections(username, team_id):
+    """
+    If the user is logged in and owns the team in the route, show their weekly projection view.
+    """
     user = User.query.get_or_404(username)
     team = Team.query.get_or_404(team_id)
     if 'user' in session:
@@ -232,10 +257,10 @@ def show_opp_team(opp_team_id, team_id):
             if opp_team in team.opponents:
                 return render_template('opp-team-view.html', team=team, opp_team=opp_team)
             else:
-                flash('Sorry, that team does not belong to you.')
+                flash("Sorry, that's an opponent of another team.")
                 return redirect(url_for('show_user_hub', username=team.owner))
         else: 
-            flash('Sorry, that is not your username.')
+            flash('Sorry, that team does not belong to you.')
             return redirect(url_for('show_user_hub', username=session['user']['username']))
     else:
         flash('Please log in first.')
@@ -243,8 +268,11 @@ def show_opp_team(opp_team_id, team_id):
 
 @app.route('/teams/<int:team_id>/opponents/addteam', methods=['GET', 'POST'])
 def show_opp_team_builder(team_id):
+    """
+    If the user is logged in and the owner of the team of the route, show the opponent team builder form.
+    On successful form submission, create the new team and redirect to the opponent team view.
+    """
     team = Team.query.get_or_404(team_id)
-    came_from = request.args.get('came_from')
     if 'user' in session:
         # Check to make sure this is actually the user's team
         if session['user']['username'] == team.owner:
@@ -261,12 +289,8 @@ def show_opp_team_builder(team_id):
                 if players:
                     new_opp_team.add_players(player_ids=players)
 
-                #Redirect player to where they came from, if they came from somewhere
-                if came_from:
-                    if came_from == 'projections':
-                        return redirect(url_for('show_projections', username=team.owner, team_id=team_id))
-
-                return redirect(url_for('show_projections', username=team.owner, team_id=team_id))
+                #Redirect to view for new team
+                return redirect(url_for('show_opp_team', opp_team_id=new_opp_team.id, team_id=team.id))
 
             return render_template('opp-team-builder.html', form=form, team=team)
         else:
@@ -278,6 +302,10 @@ def show_opp_team_builder(team_id):
 
 @app.route('/teams/<int:team_id>/opponents/<int:opp_team_id>/edit', methods=['GET', 'POST'])
 def edit_opp_team(team_id, opp_team_id):
+    """
+    If the user is logged in and the owner of the team in the route, show the opponent team editor form.
+    On successful form submission, update the team and redirect to the opponent team view.
+    """
     opp_team = OpponentTeam.query.get_or_404(opp_team_id)
     team = Team.query.get_or_404(team_id)
     form = OppTeamBuilderForm(obj=opp_team)
@@ -291,13 +319,13 @@ def edit_opp_team(team_id, opp_team_id):
                     name = form.name.data
                     players = request.form.getlist('players')
                     opp_team.edit(name=name, players=players)
-                    # TODO: add redirect to where they came from
+                    
                     return redirect(url_for('show_opp_team', opp_team_id=opp_team_id, team_id=team.id))
 
                 return render_template('opp-team-edit.html', form=form, opp_team=opp_team, team=team)
 
             else:
-                flash("Sorry, that's an opponent of another team")
+                flash("Sorry, that's an opponent of another team.")
                 return redirect(url_for('show_team', username=session['user']['username'], team_id=team_id))
         else: 
             flash('Sorry, that is not your team.')
@@ -308,6 +336,9 @@ def edit_opp_team(team_id, opp_team_id):
 
 @app.route('/teams/<int:team_id>/opponents/<int:opp_team_id>/delete', methods=['POST'])
 def delete_opp_team(opp_team_id, team_id):
+    """
+    If the user is logged in, owns the team in the route, and the opponent team is an opponent of that team, delete the opposing team.
+    """
     team = Team.query.get_or_404(team_id)
     opp_team = OpponentTeam.query.get_or_404(opp_team_id)
     if 'user' in session:
@@ -330,6 +361,9 @@ def delete_opp_team(opp_team_id, team_id):
 
 @app.route('/trade-analyzer')
 def show_trade_analyzer():
+    """
+    If the user is logged in, show the trade analyzer.
+    """
     #Check that user is logged in
     if 'user' in session:
         user = User.query.get(session['user']['username'])
@@ -341,6 +375,9 @@ def show_trade_analyzer():
 
 @app.route('/pickup-analyzer')
 def show_pickup_analyzer():
+    """
+    If the user is logged in, show the pickup analyzer.
+    """
     #Check that user is logged in
     if 'user' in session:
         user = User.query.get(session['user']['username'])
@@ -352,18 +389,27 @@ def show_pickup_analyzer():
 
 @app.route('/data/<username>/teams')
 def get_user_teams(username):
+    """
+    Return JSON array of the team ids associated with a user.
+    """
     user = User.query.get_or_404(username)
     teams = [team.serialize() for team in user.teams]
     return jsonify(teams=teams)
 
 @app.route('/data/teams/<int:team_id>/players')
 def get_user_team_players(team_id):
+    """
+    Return JSON array of the player ids associated with a team.
+    """
     team = Team.query.get_or_404(team_id)
     players = [player.player_id for player in team.players]
     return jsonify(players=players)
 
 @app.route('/data/oppteams/<int:opp_team_id>')
 def get_opp_team_players(opp_team_id):
+    """
+    Return a JSON object containing the name and players associated with an opposing team.
+    """
     opp_team = OpponentTeam.query.get_or_404(opp_team_id)
     name = opp_team.name
     players = [player.player_id for player in opp_team.players]

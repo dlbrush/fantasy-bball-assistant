@@ -7,7 +7,7 @@ Edit {{opp_team.name}}
 {% block content %}
 <div class="row">
     <div class="col-md-5 col-xs-12 " id="team-builder-form">
-        <h2>Edit team</h2>
+        <h2>Edit {{opp_team.name}}</h2>
         <form class="border border-info p-3 rounded-sm" method="POST">
             {{form.hidden_tag()}}
             {% for field in form if field.widget.input_type != 'hidden' %}
