@@ -90,18 +90,15 @@ document.addEventListener("DOMContentLoaded", async function() {
         if (oppId) {
             document.querySelector('#team-switch').classList.remove('hide');
             await getOpponentProjection(oppId, userTeamId, players, teamData, today);
-            // const oppData = await getOpponentData(oppId);
-
-            // document.querySelector('#opponent-name').innerText = oppData.name;
-            // document.querySelector('#edit-opp-team').setAttribute('href', `/teams/${userTeamId}/opponents/${oppId}/edit`);
-            // const oppTeamPlayerIds = oppData.players;
-            // const oppTeamPlayers = oppTeamPlayerIds.map(id => getPlayer(id, players));
-            // await getTeamProjections(oppTeamPlayers, today, 'opp', teamData)
         }
     }
 
     async function projectFromDate(evt) {
         const date = new Date(evt.target.value);
+        console.log(evt.target.value);
+        console.log(date);
+        console.log(date.getUTCDate());
+        populateScheduleCells(date);
         await getTeamProjections(userTeamPlayers, date, 'user', teamData);
         if (oppSelect.value) {
             await getOpponentProjection(oppSelect.value, userTeamId, players, teamData, date);

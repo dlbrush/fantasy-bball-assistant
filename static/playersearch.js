@@ -25,18 +25,27 @@ class playerSearch {
         this.targetList.addEventListener('click', this.handleRemovePlayer);
         document.addEventListener('mouseup', this.hideResultsOnClick);
 
-        this.populatePlayerOptions(this.playerSelect, players);
+        this.populatePlayerOptions();
         this.populateExistingPlayerChoices(this);
     }
 
+    /**
+     * Add a message to the player list when it is visible but there are no players showing.
+     * Returns the appended HTML element.
+     */
     showEmptyMessage() {
         clearChildren(this.playerList);
         const message = document.createElement('p');
         message.classList.add('lead');
         message.innerText = 'Choose players here';
         this.playerList.append(message);
+        return message
     }
 
+    /**
+     * Show the search results when the search bar receives focus.
+     * @param {Event} evt Event that triggers this function
+     */
     showResultsOnFocus(evt) {
         this.results.classList.remove('hide');
         //If the search bar is empty, append a message. Otherwise, continue to show the players matching the current search.
@@ -45,6 +54,10 @@ class playerSearch {
         }
     }
 
+    /**
+     * Hides the list of results when the search container is clicked away from.
+     * @param {Event} evt Event that triggers this function
+     */
     hideResultsOnClick(evt) {
         // if the target of the click isn't an element of this search class, hide the search results
         const isSearchElement = this.elements.find(element => element.isEqualNode(evt.target));
@@ -53,10 +66,17 @@ class playerSearch {
         }
     }
 
+    /**
+     * Hide the list of results by giving it the hide class.
+     */
     hideResults() {
         this.results.classList.add('hide');
     }
 
+    /**
+     * When the user changes the value of the search bar, either get the players matching the current value or show the empty message.
+     * @param {Event} evt The event that triggers this function
+     */
     handleSearch(evt) {
         const term = evt.target.value;
         if (!term) {
@@ -67,17 +87,33 @@ class playerSearch {
         }
     }
 
+    /**
+     * Takes a search term and returns an array of player objects where the player's name contains the term.
+     * @param {string} term 
+     * @returns {array} Array of player objects where the player's name contains the string passed
+     */
     getMatchedPlayers(term) {
         return this.players.filter(player => {
             return this.matchPlayerName(term, player) && !this.selectedPlayers.has(player.ID);
         })
     }
 
+    /**
+     * Returns true if the search term is contained in the player object's name property, regardless of case.
+     * @param {string} term 
+     * @param {object} player 
+     * @returns Boolean
+     */
     matchPlayerName(term, player) {
         const regex = new RegExp(term, "i");
         return regex.test(player.name)
     }
 
+    /**
+     * Adds matched players to the list of results
+     * @param {array} matches Array of matched player objects from getMatchedPlayers
+     * @returns HTMLElement (ul of player choices)
+     */
     populateMatchedPlayerNames(matches) {
         clearChildren(this.playerList);
         for (let player of matches) {
@@ -87,8 +123,14 @@ class playerSearch {
             li.innerText = player.name;
             this.playerList.append(li)
         }
+        return this.playerList
     }
 
+    /**
+     * If the user clicks on one of the player choice list items,
+     * add the player's ID to the list of selected players and display their info onscreen.
+     * @param {Event} evt 
+     */
     handlePlayerChoice(evt) {
         if (evt.target.tagName === 'LI') {
             const choiceId = evt.target.id;
@@ -108,11 +150,10 @@ class playerSearch {
         }
     }
 
-    addPlayerChoice(choiceId) {
-        const option = this.playerSelect.querySelector(`option[value="${choiceId}"]`);
-        option.setAttribute('selected', true);
-    }
-
+    /**
+     * When a remove player button is clicked, remove that player's block from the display list and deselect their option from the multiselect.
+     * @param {Event} evt The event that triggers this function
+     */
     handleRemovePlayer(evt) {
         if (evt.target.classList.contains('remove-player')) {
             const playerId = evt.target.id.substr(7);
@@ -124,16 +165,36 @@ class playerSearch {
         }
     }
 
-    populatePlayerOptions(target, players) {
-        for (let player of players) {
+    /**
+     * Adds an option element for each player to the selection element.
+     */
+    populatePlayerOptions() {
+        for (let player of this.players) {
             const option = document.createElement('option');
             option.classList.add('player-choice');
             option.value = player.ID;
             option.innerText = player.name;
-            target.append(option);
+            this.playerSelect.append(option);
         }
     }
 
+    /**
+     * Adds the selected attribute to the option associated with the passed ID.
+     * @param {Integer} choiceId Player ID of chosen player
+     * @returns HTMLElement of selected option
+     */
+    addPlayerChoice(choiceId) {
+        const option = this.playerSelect.querySelector(`option[value="${choiceId}"]`);
+        if(option) {
+            option.setAttribute('selected', true);
+        }
+        return option
+    }
+
+    /**
+     * If there are any player blocks in the list of chosen players when the page loads (coming from the server), add them to the selections and populate player info
+     * @param {playerSearch} searchInstance The callback function changes the scope of 'this', so we pass the search class instance in as a parameter
+     */
     populateExistingPlayerChoices(searchInstance) {
         const playerBlocks = document.querySelectorAll('.team-player');
         playerBlocks.forEach(function(block) {

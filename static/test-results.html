@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Player Search</title>
+    <link rel="stylesheet" href="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine.css" />
+</head>
+<body>
+    
+    <!-- PLAYER SEARCH COMPONENTS -->
+    <form>
+        <div>
+            <label for="players">Add Players</label>
+            <select id="players" name="players" multiple hidden>
+            </select>
+        </div>
+        <!-- Add player search to replace multi-select input -->
+        <div id="player-search">
+            <input type="text" id="player-search-bar" placeholder="Search for players">
+            <div class="search-results hide" id="player-search-results">
+                <ul id="player-list"></ul>
+            </div>
+        </div>
+    </form>
+    <div id="team-builder-list">
+        <div id="block-201939" class="team-player">  
+        </div>
+    </div>
+    
+    <!-- PLAYER SCHEUDLE GRID -->
+    <table id="user-player-schedule">
+        <thead>
+            <th class="text-center">Player</th>
+            <th class="day user-day" id="user-day-0"></th>
+            <th class="day user-day" id="user-day-1"></th>
+            <th class="day user-day" id="user-day-2"></th>
+            <th class="day user-day" id="user-day-3"></th>
+            <th class="day user-day" id="user-day-4"></th>
+            <th class="day user-day" id="user-day-5"></th>
+            <th class="day user-day" id="user-day-6"></th>
+            <th class="text-center">Total Games</th>
+        </thead>
+        <tbody id="user-player-grid-schedule-body">
+        </tbody>
+    </table>
+    
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <script src="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+    <script src="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+    <script src="https://unpkg.com/jasmine-core/lib/jasmine-core/boot.js"></script>
+    <script src="playersearch.js"></script>
+    <script src="players.js"></script>
+    <script src="utilities.js"></script>
+    <script src="testdata.js"></script>
+    <script src="schedule.js"></script>
+    <script src="test-schedule.js"></script>
+    <script src="test-players.js"></script>
+    <script src="test-playersearch.js"></script>
+</body>
+</html>
