@@ -29,7 +29,7 @@
         </div>
     </div>
     
-    <!-- PLAYER SCHEUDLE GRID -->
+    <!-- PLAYER SCHEDULE GRID -->
     <table id="user-player-schedule">
         <thead>
             <th class="text-center">Player</th>
@@ -45,6 +45,72 @@
         <tbody id="user-player-grid-schedule-body">
         </tbody>
     </table>
+
+    <!-- TOTAL STAT GRID -->
+    <table id="user-totals">
+        <thead>
+            <th class="text-center">Category</th>
+            <th class="text-center">Projected Total</th>
+        </thead>
+        <tbody>
+            <tr class="gp-row">
+                <th class="cat-name text-center">GAMES</th>
+                <td class="cat-user-total text-center" id="user-gp-total"></td>
+            </tr>
+            <tr class="fgp-row">
+                <th class="cat-name text-center">FG%</th>
+                <td class="cat-user-total text-center" id="user-fgp-total"></td>
+            </tr>
+            <tr class="ftp-row">
+                <th class="cat-name text-center">FT%</th>
+                <td class="cat-user-total text-center" id="user-ftp-total"></td>
+            </tr>
+            <tr class="tpm-row">
+                <th class="cat-name text-center">3PM</th>
+                <td class="cat-user-total text-center" id="user-tpm-total"></td>
+            </tr>
+            <tr class="rpg-row">
+                <th class="cat-name text-center">REB</th>
+                <td class="cat-user-total text-center" id="user-rpg-total"></td>
+            </tr>
+            <tr class="apg-row">
+                <th class="cat-name text-center">AST</th>
+                <td class="cat-user-total text-center" id="user-apg-total"></td>
+            </tr>
+            <tr class="spg-row">
+                <th class="cat-name text-center">STL</th>
+                <td class="cat-user-total text-center" id="user-spg-total"></td>
+            </tr>
+            <tr class="bpg-row">
+                <th class="cat-name text-center">BLK</th>
+                <td class="cat-user-total text-center" id="user-bpg-total"></td>
+            </tr>
+            <tr class="topg-row">
+                <th class="cat-name text-center">TOS</th>
+                <td class="cat-user-total text-center" id="user-topg-total"></td>
+            </tr>
+            <tr class="ppg-row">
+                <th class="cat-name text-center">PTS</th>
+                <td class="cat-user-total text-center" id="user-ppg-total"></td>
+            </tr>
+            <tr class="ppg-row">
+                <th class="cat-name text-center">PTS</th>
+                <td class="cat-user-total text-center" id="user-ppg-total"></td>
+            </tr>
+            <tr class="dummy-row">
+                <th class="cat-name text-center">PTS</th>
+                <td class="text-center" id="user-dummy-total"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- PLAYER STAT GRID -->
+    <thead>
+        <th class="text-center">Player</th>
+    </thead>
+    <tbody id="user-player-grid-stats-body">
+    </tbody>
+
     
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
     <script src="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine.js"></script>
@@ -55,8 +121,10 @@
     <script src="utilities.js"></script>
     <script src="testdata.js"></script>
     <script src="schedule.js"></script>
+    <script src="stats.js"></script>
     <script src="test-schedule.js"></script>
     <script src="test-players.js"></script>
+    <script src="test-stats.js"></script>
     <script src="test-playersearch.js"></script>
 </body>
 </html>

@@ -6,6 +6,152 @@ const testPlayer = {
     position: 'F'
 }
 
+const testStats1 = {
+  ID: 2544,
+  fgp: 50,
+  ftp: 80,
+  ppg: 20,
+  rpg: 8.5,
+  apg: 5,
+  spg: 1,
+  bpg: 1,
+  topg: 5,
+  gp: 1,
+  tpg: 2,
+  fgmpg: 10,
+  fgapg: 20,
+  ftmpg: 8,
+  ftapg: 10
+}
+
+const testStats2 = {
+  ID: 1629659,
+  fgp: 40,
+  ftp: 80,
+  ppg: 10,
+  rpg: 3.5,
+  apg: 10,
+  spg: 2,
+  bpg: 0,
+  topg: 1,
+  gp: 1,
+  tpg: 1,
+  fgmpg: 4,
+  fgapg: 10,
+  ftmpg: 4,
+  ftapg: 5
+}
+
+const testPlayerToProject1 = {
+  numProjectedGames: 2,
+  fantasyStats: {
+    fgp: 50,
+    ftp: 80,
+    ppg: 20,
+    rpg: 8.5,
+    apg: 5,
+    spg: 1,
+    bpg: 1,
+    topg: 5,
+    gp: 1,
+    tpg: 2,
+    fgmpg: 10,
+    fgapg: 20,
+    ftmpg: 8,
+    ftapg: 10
+  }
+}
+
+const testTeamTotals = {
+    fgp: 50,
+    ftp: 80,
+    ppg: 100,
+    rpg: 60,
+    apg: 50,
+    spg: 20,
+    bpg: 10,
+    topg: 20,
+    gp: 5,
+    tpg: 20,
+    fgmpg: 50,
+    fgapg: 100,
+    ftmpg: 20,
+    ftapg: 40
+}
+
+const testTotalDiff = {
+  fgp: -2,
+  ftp: 5,
+  ppg: 10,
+  rpg: 8,
+  apg: 5,
+  spg: -2,
+  bpg: -2,
+  topg: 1,
+  gp: 2,
+  tpg: 3,
+  fgmpg: 2,
+  fgapg: -3,
+  ftmpg: 2,
+  ftapg: -5
+}
+
+// const testPlayerToProject2 = {
+//   numProjectedGames: 1,
+//   fantasyStats: {
+//     fgp: 50,
+//     ftp: 80,
+//     ppg: 20,
+//     rpg: 8.5,
+//     apg: 5,
+//     spg: 1,
+//     bpg: 1,
+//     topg: 5,
+//     gp: 1,
+//     tpg: 2,
+//     fgmpg: 10,
+//     fgapg: 20,
+//     ftmpg: 8,
+//     ftapg: 10
+//   }
+// }
+
+const testPlayerProfile = {
+  seasonYear: 2020,
+  seasonStageId: 2,
+  ppg: "23.8",
+  rpg: "11.5",
+  apg: "3.7",
+  mpg: "33.6",
+  top: "1.8",
+  spg: "1",
+  bpg: "0.7",
+  tpp: "41.1",
+  ftp: "83.6",
+  fgp: "48.4",
+  assists: "239",
+  blocks: "44",
+  steals: "61",
+  turnovers: "116",
+  offReb: "129",
+  defReb: "605",
+  totReb: "734",
+  fgm: "617",
+  fga: "1274",
+  tpm: "164",
+  tpa: "399",
+  ftm: "127",
+  fta: "152",
+  pFouls: "122",
+  points: "1525",
+  gamesPlayed: "64",
+  gamesStarted: "64",
+  plusMinus: "-1080",
+  min: "2150",
+  dd2: "42",
+  td3: "1"
+}
+
 const testPlayerData = [
     {
       "firstName": "Precious",
@@ -42070,4 +42216,9 @@ const testSchedule = [
         "score": ""
       }
     }
-  ];
+];
+
+const testOpponentData = {
+  name: 'The Worst',
+  players: ['2544', '1629659']
+}
