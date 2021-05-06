@@ -28,25 +28,8 @@
         <div id="block-201939" class="team-player">  
         </div>
     </div>
-    
-    <!-- PLAYER SCHEDULE GRID -->
-    <table id="user-player-schedule">
-        <thead>
-            <th class="text-center">Player</th>
-            <th class="day user-day" id="user-day-0"></th>
-            <th class="day user-day" id="user-day-1"></th>
-            <th class="day user-day" id="user-day-2"></th>
-            <th class="day user-day" id="user-day-3"></th>
-            <th class="day user-day" id="user-day-4"></th>
-            <th class="day user-day" id="user-day-5"></th>
-            <th class="day user-day" id="user-day-6"></th>
-            <th class="text-center">Total Games</th>
-        </thead>
-        <tbody id="user-player-grid-schedule-body">
-        </tbody>
-    </table>
 
-    <!-- TOTAL STAT GRID -->
+    <!-- TOTAL USER STAT GRID -->
     <table id="user-totals">
         <thead>
             <th class="text-center">Category</th>
@@ -104,12 +87,126 @@
         </tbody>
     </table>
 
-    <!-- PLAYER STAT GRID -->
-    <thead>
-        <th class="text-center">Player</th>
-    </thead>
-    <tbody id="user-player-grid-stats-body">
-    </tbody>
+    <!-- TOTAL OPPONENT STAT GRID -->
+    <table id="opp-totals">
+        <thead>
+            <th class="text-center">Category</th>
+            <th class="text-center">Projected Total</th>
+        </thead>
+        <tbody>
+            <tr class="gp-row">
+                <th class="cat-name text-center">GAMES</th>
+                <td class="cat-opp-total text-center" id="opp-gp-total"></td>
+            </tr>
+            <tr class="fgp-row">
+                <th class="cat-name text-center">FG%</th>
+                <td class="cat-opp-total text-center" id="opp-fgp-total"></td>
+            </tr>
+            <tr class="ftp-row">
+                <th class="cat-name text-center">FT%</th>
+                <td class="cat-opp-total text-center" id="opp-ftp-total"></td>
+            </tr>
+            <tr class="tpm-row">
+                <th class="cat-name text-center">3PM</th>
+                <td class="cat-opp-total text-center" id="opp-tpm-total"></td>
+            </tr>
+            <tr class="rpg-row">
+                <th class="cat-name text-center">REB</th>
+                <td class="cat-opp-total text-center" id="opp-rpg-total"></td>
+            </tr>
+            <tr class="apg-row">
+                <th class="cat-name text-center">AST</th>
+                <td class="cat-opp-total text-center" id="opp-apg-total"></td>
+            </tr>
+            <tr class="spg-row">
+                <th class="cat-name text-center">STL</th>
+                <td class="cat-opp-total text-center" id="opp-spg-total"></td>
+            </tr>
+            <tr class="bpg-row">
+                <th class="cat-name text-center">BLK</th>
+                <td class="cat-opp-total text-center" id="opp-bpg-total"></td>
+            </tr>
+            <tr class="topg-row">
+                <th class="cat-name text-center">TOS</th>
+                <td class="cat-opp-total text-center" id="opp-topg-total"></td>
+            </tr>
+            <tr class="ppg-row">
+                <th class="cat-name text-center">PTS</th>
+                <td class="cat-opp-total text-center" id="opp-ppg-total"></td>
+            </tr>
+            <tr class="ppg-row">
+                <th class="cat-name text-center">PTS</th>
+                <td class="cat-opp-total text-center" id="opp-ppg-total"></td>
+            </tr>
+            <tr class="dummy-row">
+                <th class="cat-name text-center">PTS</th>
+                <td class="text-center" id="opp-dummy-total"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- USER PLAYER SCHEDULE GRID -->
+    <table id="user-player-schedule">
+        <thead>
+            <th class="text-center">Player</th>
+            <th class="day user-day" id="user-day-0"></th>
+            <th class="day user-day" id="user-day-1"></th>
+            <th class="day user-day" id="user-day-2"></th>
+            <th class="day user-day" id="user-day-3"></th>
+            <th class="day user-day" id="user-day-4"></th>
+            <th class="day user-day" id="user-day-5"></th>
+            <th class="day user-day" id="user-day-6"></th>
+            <th class="text-center">Total Games</th>
+        </thead>
+        <tbody id="user-player-grid-schedule-body">
+        </tbody>
+    </table>
+
+    <!-- USER PLAYER STAT PROJECTION GRID -->
+    <table>
+        <thead>
+            <th class="text-center">Player</th>
+        </thead>
+        <tbody id="user-player-grid-stats-body">
+        </tbody>
+    </table>
+
+    <!-- OPP PLAYER SCHEDULE GRID -->
+    <!-- Removes day class from cells to not interfere with schedule-test -->
+    <table id="opp-player-schedule">
+        <thead>
+            <th class="text-center">Player</th>
+            <th class="opp-day" id="opp-day-1"></th>
+            <th class="opp-day" id="opp-day-0"></th>
+            <th class="opp-day" id="opp-day-2"></th>
+            <th class="opp-day" id="opp-day-3"></th>
+            <th class="opp-day" id="opp-day-4"></th>
+            <th class="opp-day" id="opp-day-5"></th>
+            <th class="opp-day" id="opp-day-6"></th>
+            <th class="text-center">Total Games</th>
+        </thead>
+        <tbody id="opp-player-grid-schedule-body">
+        </tbody>
+    </table>
+
+    <!-- OPP PLAYER STAT PROJECTION GRID -->
+    <table>
+        <thead>
+            <th class="text-center">Player</th>
+        </thead>
+        <tbody id="opp-player-grid-stats-body">
+        </tbody>
+    </table>
+
+    <!-- PLAYER OPTIONS FOR TRADE -->
+    <select name="players" id="trade-players">
+        <option value="2544" selected></option>
+        <option value="1629659"></option>
+    </select>
+
+    <!-- OPPONENT INFO FOR PROJECTIONS -->
+    <h3 id="opponent-name">Opponent</h3>
+    <a href="#" id="edit-opp-team"></a>
 
     
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
@@ -122,6 +219,7 @@
     <script src="testdata.js"></script>
     <script src="schedule.js"></script>
     <script src="stats.js"></script>
+    <script src="mock-functions.js"></script>
     <script src="test-schedule.js"></script>
     <script src="test-players.js"></script>
     <script src="test-stats.js"></script>

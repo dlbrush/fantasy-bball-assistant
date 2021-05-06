@@ -1,130 +1,160 @@
-//Mock functions that require API data to use mock data
-
-function getTeamProjections(teamPlayers, date, targetName, teamData) {
-    //Fill totals
-    const totals = getTeamTotals(teamPlayers, date);
-    const totalCells = Array.from(document.querySelectorAll(`.cat-${targetName}-total`));
-    mapStatsToTable(totalCells, totals);
-
-    //Map stats for the target's players
-    const playerStatsBody = document.querySelector(`#${targetName}-player-grid-stats-body`)
-    const playerScheduleBody = document.querySelector(`#${targetName}-player-grid-schedule-body`)
-    clearChildren(playerStatsBody);
-    clearChildren(playerScheduleBody);
-    teamPlayers.forEach(player => {
-        createPlayerStatRow(playerStatsBody, player, true);
-        createPlayerScheduleRow(playerScheduleBody, player, date);
-        populatePlayerInfo(playerStatsBody.querySelector(`.player-${player.ID}-head`), player, false);
-        populatePlayerInfo(playerScheduleBody.querySelector(`.player-${player.ID}-head`), player, false);
-        populateGameCells(player, date, teamData, playerScheduleBody);
+describe('getTeamProjections projects the total stats that a team will produce for the week of the date passed and maps their stats onto the tables in the projection view', function() {
+    it('Adds 2 rows to the schedule and stat grids when 2 players are passed', function() {
+        const date = new Date(2021, 3, 26);
+        const teamPlayers = testOpponentData.players;
+        const allPlayerTotals = getTeamProjections(teamPlayers, date, 'user', testTeamData);
+        const scheduleBody = document.querySelector('#user-player-grid-schedule-body');
+        const statBody = document.querySelector('#user-player-grid-stats-body');
+        expect(scheduleBody.querySelectorAll('tr').length).toEqual(2);
+        expect(statBody.querySelectorAll('tr').length).toEqual(2);
     });
-    const allPlayerTotals = teamPlayers.map(function(player) {
-        const playerTotals = getPlayerTotals(player, date);
-        return playerTotals;
-    });
-    allPlayerTotals.forEach(playerTotals => {
-        const playerTotalCells = Array.from(document.querySelectorAll(`.cat-${playerTotals.ID}-total`));
-        mapStatsToTable(playerTotalCells, playerTotals);
-    });
-    return allPlayerTotals
-}
 
-function getOpponentProjection(oppTeamId, userTeamId, players, teamData, date) {
-
-    const oppData = testOpponentData;
-    document.querySelector('#opponent-name').innerText = oppData.name;
-    document.querySelector('#edit-opp-team').setAttribute('href', `/teams/${userTeamId}/opponents/${oppTeamId}/edit`);
-    const oppTeamPlayerIds = oppData.players;
-    const oppTeamPlayers = oppTeamPlayerIds.map(id => getPlayer(id, players));
-    getTeamProjections(oppTeamPlayers, date, 'opp', teamData);
-}
-
-function analyzeTradeSide(playerOptions, target, date, players) {
-    const selectedOptions = playerOptions.filter(option => {
-        return option.hasAttribute('selected');
+    it('Returns array with an object of stats for each player', function() {
+        const date = new Date(2021, 3, 26);
+        const teamPlayers = testOpponentData.players;
+        const allPlayerTotals = getTeamProjections(teamPlayers, date, 'user', testTeamData);
+        expect(allPlayerTotals.length).toEqual(2);
     });
-    const selectedPlayerIds = selectedOptions.map(option => {
-        return option.value
+})
+
+describe("getOpponentProjection gets the necessary data to project stats for an opponent's team, and then calls getTeamProjections to map them to tables on projection view", function() {
+    it('Appends the opponent team name to the page', function() {
+        const players = getPlayers(testPlayerData, testTeamData);
+        const date = new Date(2021, 3, 26);
+        const projections = getOpponentProjection(1, 1, players, testTeamData, date);
+        expect(document.querySelector('#opponent-name').innerText).toEqual('The Worst');
+    });
+
+    it('Sets the href of the link to edit the opponent team', function() {
+        const players = getPlayers(testPlayerData, testTeamData);
+        const date = new Date(2021, 3, 26);
+        const projections = getOpponentProjection(1, 1, players, testTeamData, date);
+        const link = '/teams/1/opponents/1/edit'
+        expect(document.querySelector('#edit-opp-team').getAttribute('href')).toEqual(link);
+    });
+
+    it('Returns an array of stat objects for each player on the team', function() {
+        const players = getPlayers(testPlayerData, testTeamData);
+        const date = new Date(2021, 3, 26);
+        const projections = getOpponentProjection(1, 1, players, testTeamData, date);
+        expect(projections.length).toEqual(2);
+    });
+})
+
+describe('analyzeTradeSide finds the list of players that the user has chosen to trade for or trade away, and maps their per-game stats.', function() {
+    it('Returns per-game stats for selected players', function() {
+        const players = getPlayers(testPlayerData, testTeamData);
+        const options = Array.from(document.querySelector('#trade-players').options);
+        const date = new Date(2021, 3, 26);
+        const playerTotals = getTeamTotals([testPlayer], date, 1);
+        const results = analyzeTradeSide(options, 'user', date, players);
+        expect(results).toEqual(playerTotals);
+    });
+})
+
+describe('analyzePickupSide takes a player being picked up or dropped and maps their per-game and weekly stats', function() {
+    it('Maps a row in both the per-game and weekly tables passed', function() {
+        const players = getPlayers(testPlayerData, testTeamData);
+        const perGameTable = document.createElement('table');
+        const perGameBody = document.createElement('tbody');
+        perGameTable.append(perGameBody);
+        const weeklyTable = document.createElement('table');
+        const weeklyBody = document.createElement('tbody');
+        weeklyTable.append(weeklyBody);
+        const date = new Date(2021, 3, 26);
+
+        const results = analyzePickupSide(2544, players, 'ADDING', perGameBody, weeklyBody, date);
+        expect(perGameBody.querySelector('tr')).toBeTruthy();
+        expect(weeklyBody.querySelector('tr')).toBeTruthy();
+    });
+
+    it('Returns per-game and weekly stats for the player', function() {
+        const players = getPlayers(testPlayerData, testTeamData);
+        const perGameTable = document.createElement('table');
+        const perGameBody = document.createElement('tbody');
+        perGameTable.append(perGameBody);
+        const weeklyTable = document.createElement('table');
+        const weeklyBody = document.createElement('tbody');
+        weeklyTable.append(weeklyBody);
+        const date = new Date(2021, 3, 26);
+
+        const results = analyzePickupSide(2544, players, 'ADDING', perGameBody, weeklyBody, date);
+        expect(results.perGameStats).toEqual(getPlayerTotals(testPlayer, date, 1));
+        //3 games will remain after the first day of the week passed
+        expect(results.weekStats).toEqual(getPlayerTotals(testPlayer, date, 3));
     })
-    const selectedPlayers = selectedPlayerIds.map(id => getPlayer(id, players));
-    const playerStatsArray = selectedPlayers.map( function(player) {
-            const playerStats = getPlayerTotals(player, date, 1);
-            return playerStats;
-        });
-    const statsBody = document.querySelector(`#${target}-player-grid-stats-body`);
-    clearChildren(statsBody);
+});
 
-    selectedPlayers.forEach(player => {
-        createPlayerStatRow(statsBody, player, false);
-        populatePlayerInfo(document.querySelector(`.player-${player.ID}-head`), player, false);
-    });
-    playerStatsArray.forEach(playerStats => {
-        const playerStatCells = Array.from(document.querySelectorAll(`.cat-${playerStats.ID}-total`));
-        mapStatsToTable(playerStatCells, playerStats);
+describe('getTeamTotals takes a list of player IDs and calculates their total stats for the week of the passed date or the number of games passed as an argument', function() {
+    it('Returns the total number of games played', function() {
+        const teamPlayers = testOpponentData.players;
+        const date = new Date(2021, 3, 26);
+        const totals = getTeamTotals(teamPlayers, date, 2);
+        expect(totals.gp).toEqual(4);
     });
 
-    const playerTotals = getTeamTotals(selectedPlayers, date, 1);
-    const totalRow = createTotalStatRow(statsBody, target, false);
-    const totalCells = Array.from(totalRow.children);
-    mapStatsToTable(totalCells, playerTotals);
-    return playerTotals
-}
-
-function analyzePickupSide(playerId, players, actionString, perGameBody, weeklyBody, date) {
-    const player = getPlayer(playerId, players);
-    createPlayerStatRow(perGameBody, player, false, actionString);
-    populatePlayerInfo(perGameBody.querySelector(`.player-${player.ID}-head`), player, false);
-    const perGameStats = getPlayerTotals(player, date, 1);
-    const perGameCells = Array.from(perGameBody.querySelectorAll(`.cat-${player.ID}-total`));
-    mapStatsToTable(perGameCells, perGameStats);
-
-    const playerGamesRemaining = getNumWeekGamesRemaining(player, date);
-    const weekStats = getPlayerTotals(player, date, playerGamesRemaining);
-    createPlayerStatRow(weeklyBody, player, true, actionString);
-    populatePlayerInfo(weeklyBody.querySelector(`.player-${player.ID}-head`), player, false);
-    const weekCells = Array.from(weeklyBody.querySelectorAll(`.cat-${player.ID}-total`));
-    mapStatsToTable(weekCells, weekStats);
-
-    return {perGameStats, weekStats}
-}
-
-function getTeamTotals(players, date, numGames) {
-    const playersToProject = players.map(function(player) {
-        const playerToProject = getPlayerToProject(player, date, numGames);
-        return playerToProject
+    it('Returns fgp and ftp based on total attempts and makes, not adding together from the playerToProject objects', function() {
+        const teamPlayers = testOpponentData.players;
+        const date = new Date(2021, 3, 26);
+        const totals = getTeamTotals(teamPlayers, date, 1);
+        expect(totals.fgp).toEqual(48.2);
+        expect(totals.ftp).toEqual(83.3);
     });
-    let totals = {ppg: 0, rpg: 0, apg: 0, spg: 0, bpg: 0, topg: 0, tpg: 0, fgmpg: 0, fgapg: 0, ftmpg: 0, ftapg: 0}
-    totals = playersToProject.reduce(addPlayerToTotal, totals);
-    totals.fgp = roundToTenth(100* totals.fgmpg/totals.fgapg);
-    totals.ftp = roundToTenth(100 * totals.ftmpg/totals.ftapg);
-    totals.gp = playersToProject.reduce((total, nextPlayer) => {
-        return total + nextPlayer.numProjectedGames
-    }, 0);
-    return totals
-}
+})
 
-function getPlayerTotals(player, date, numGames) {
-    const playerToProject = getPlayerToProject(player, date, numGames);
-    const totals = {ID: player.ID}
-    for (let stat in playerToProject.fantasyStats) {
-        if (stat === 'gp') {
-            totals[stat] = playerToProject.numProjectedGames
-        } else if(stat === 'fgp' || stat === 'ftp') {
-            totals[stat] = playerToProject.fantasyStats[stat]
-        } else {
-            totals[stat] = roundToTenth(
-                playerToProject.fantasyStats[stat] * playerToProject.numProjectedGames
-            );
+describe("getPlayerTotals projects a player's total stats in the week of the passed date or for the number of games passed as an argument", function() {
+    it('Returns the player ID as a property', function() {
+        const date = new Date(2021, 3, 26);
+        const totals = getPlayerTotals(testPlayer, date);
+        expect(totals.ID).toEqual(testPlayer.ID);
+    });
+
+    it('Returns FGP and FTP from projection stats without any multiplication', function() {
+        const date = new Date(2021, 3, 26);
+        const playerToProject = getPlayerToProject(testPlayer, date);
+        const totals = getPlayerTotals(testPlayer, date);
+        expect(totals.fgp).toEqual(playerToProject.fantasyStats.fgp);
+        expect(totals.ftp).toEqual(playerToProject.fantasyStats.ftp);
+    });
+
+    it('Returns games played equal to projected games played', function() {
+        const date = new Date(2021, 3, 26);
+        const playerToProject = getPlayerToProject(testPlayer, date);
+        const totals = getPlayerTotals(testPlayer, date);
+        expect(totals.gp).toEqual(playerToProject.numProjectedGames);
+    });
+
+    it('Returns all other stats multiplied by games played', function() {
+        const date = new Date(2021, 3, 26);
+        const playerToProject = getPlayerToProject(testPlayer, date);
+        const totals = getPlayerTotals(testPlayer, date);
+        for(let stat in totals) {
+            if(stat != 'gp' && stat != 'fgp' && stat != 'ftp' && stat!= 'ID') {
+                expect(totals[stat]).toEqual(playerToProject.fantasyStats[stat] * playerToProject.numProjectedGames);
+            }
         }
-    }
-    return totals
-}
+    });
+})
 
-function getPlayerToProject(player, date, numGames) {
-    const numProjectedGames = (numGames ? numGames : getNumGamesForWeek(player, date));
-    const seasonStats = testPlayerProfile;
-    return {numProjectedGames, fantasyStats: getFantasyStats(seasonStats)}
-}
+describe('getPlayerToProject takes a player and a date and returns the number of games they are projected to play in a week and their per-game stats', function() {
+    it('Returns a number of games based on the date when no number is passed', function() {
+        const date = new Date(2021, 3, 26);
+        const playerToProject = getPlayerToProject(testPlayer, date);
+        expect(playerToProject.numProjectedGames).toEqual(4);
+    });
+
+    it('Returns the number of games passed when there is one instead of the schedule results', function() {
+        const date = new Date(2021, 3, 26);
+        const playerToProject = getPlayerToProject(testPlayer, date, 2);
+        expect(playerToProject.numProjectedGames).toEqual(2);
+    });
+
+    it('Returns fantasy stats from the dataset for the passed player', function() {
+        const date = new Date(2021, 3, 26);
+        const playerToProject = getPlayerToProject(testPlayer, date, 2);
+        expect(playerToProject.fantasyStats).toEqual(getFantasyStats(testPlayerProfile));
+    });
+});
 
 describe('getComparison returns an object with the differences between the first object passed and the second one', function() {
     it('Returns the differences between two objects with all stats', function() {
@@ -431,8 +461,4 @@ describe('createDiffStatRow creates a row of table cells to be filled with stat 
         const leadCells2 = row2.querySelectorAll('.leading-cell');
         expect(leadCells2.length).toEqual(0);
     });
-});
-
-describe('getTeamProjections takes a list of players and projects their stats for the week of the date passed', function() {
-
 });

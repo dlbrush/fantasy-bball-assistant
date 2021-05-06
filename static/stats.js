@@ -4,7 +4,7 @@ const CATEGORIES = ['gp', 'fgp', 'ftp', 'tpg', 'rpg', 'apg', 'spg', 'bpg', 'topg
  * Projects the total stats that a team will produce for the week of the date passed and maps their stats onto the tables in the projection view.
  * @param {Number[]} teamPlayers An array of player IDs for the team being projected
  * @param {Date} date The date that we should predict stats for the week of
- * @param {String} targetName The target name affixed to 
+ * @param {String} targetName The target name affixed to the cells where the stats will be mapped
  * @param {Object} teamData Team data from the API
  * @returns {Object} An object of stat totals
  */
@@ -58,7 +58,7 @@ async function getOpponentProjection(oppTeamId, userTeamId, players, teamData, d
 }
 
 /**
- * Finds the list of players that the user has chosen to trade for or trade away, and gets their total projected stats.
+ * Finds the list of players that the user has chosen to trade for or trade away, and gets their per-game stats.
  * @param {HTMLElement[]} playerOptions An array of the option elements in the player select input
  * @param {String} target The string representing the target name being added to the cells
  * @param {Date} date Any date - this is needed for functions called within this function, but is not used
@@ -168,7 +168,7 @@ function addStats(stats1, stats2) {
 
 /**
  * Takes a list of player IDs and calculates their total stats for the week of the passed date or the number of games passed as an argument
- * @param {Object} players Player data object from getPlayers
+ * @param {Object[]} players Player objects from getPlayers for all players on the team
  * @param {Date} date The date to get projections for the week of
  * @param {Number} [numGames] Optional parameter. When passed, this will override the date passed and just project for the number of games passed
  * @returns {Object} Returns total stats organized as an object
@@ -226,6 +226,14 @@ function addPlayerToTotal(currentTotals, nextPlayer) {
     return newTotals
 }
 
+/**
+ * Takes a player and a date and returns the number of games they play in that week along with their per-game fantasy stats. 
+ * If numGames is passed, the number of games they play will be that value.
+ * @param {Object} player Player data object from getPlayers
+ * @param {Date} date The date for the week we're projecting for
+ * @param {Number} [numGames] Optional parameter hardcoding the number of games to project for - overrides the date argument
+ * @returns {Object} Object with two properties, numProjectedGamed and fantasyStats
+ */
 async function getPlayerToProject(player, date, numGames) {
     const numProjectedGames = (numGames ? numGames : await getNumGamesForWeek(player, date));
     const seasonStats = await getPlayerSeasonStats(player.ID);

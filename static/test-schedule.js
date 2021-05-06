@@ -100,7 +100,7 @@ describe('populateGameCells fills the schedule grid with the initials of the tea
 });
 
 describe('populateScheduleCells fills the table header cells of a schedule grid with the dates for the week of the passed date', function() {
-    it('Maps date strings to all 7 weekdays', function() {
+    it('Maps date strings to all 7 weekdays in both user and opp grids', function() {
         const date = new Date(2021, 3, 26);
         const week = getWeekFromDate(date);
         const cells = populateScheduleCells(date);
