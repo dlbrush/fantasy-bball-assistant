@@ -1,6 +1,41 @@
 //Mock functions that require API data to use mock data
+function getGamesForWeek(player, date) {
+    const week = getWeekFromDate(date);
+    const weekForSchedule = week.map(day => formatDateForSchedule(day));
+    const teamSchedule = testSchedule;
+    return teamSchedule.filter(game => weekForSchedule.find(weekdate => game.homeStartDate === weekdate))
+}
 
-//TODO
+function getNumGamesForWeek(player, date) {
+    const games = getGamesForWeek(player, date);
+    return games.length
+}
+
+function getNumWeekGamesRemaining(player, date) {
+    const games = getGamesForWeek(player, date);
+    const week = getWeekFromDate(date);
+    const remainingWeek = week.filter(day => day > date)
+    const remainingWeekForSchedule = remainingWeek.map(day => formatDateForSchedule(day))
+    const remainingGames = games.filter(game => remainingWeekForSchedule.find(weekdate => game.homeStartDate === weekdate));
+    return remainingGames.length
+}
+
+function populateGameCells(player, date, teamData, table) {
+    const games = getGamesForWeek(player, date);
+    const week = getWeekFromDate(date);
+    const scheduleWeek = week.map(day => formatDateForSchedule(day));
+    scheduleWeek.forEach((scheduleDay, dayNum) => {
+        const scheduledGame = games.find(game => game.homeStartDate === scheduleDay);
+        if (scheduledGame) {
+            const gameCell = table.querySelector(`#player-${player.ID}-day-${dayNum}`);
+            const opponent = (scheduledGame.isHomeTeam ? 
+                    getTeamData(scheduledGame.vTeam.teamId, teamData).initials :
+                    '@' + getTeamData(scheduledGame.hTeam.teamId, teamData).initials 
+                );
+            gameCell.innerText = opponent;
+        }
+    })
+}
 function getTeamProjections(teamPlayers, date, targetName, teamData) {
     //Fill totals
     const totals = getTeamTotals(teamPlayers, date);
@@ -30,7 +65,6 @@ function getTeamProjections(teamPlayers, date, targetName, teamData) {
     return allPlayerTotals
 }
 
-//TODO
 function getOpponentProjection(oppTeamId, userTeamId, players, teamData, date) {
 
     const oppData = testOpponentData;

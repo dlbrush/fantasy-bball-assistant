@@ -1,44 +1,5 @@
-//Some global variables to use for document elements
+// Global variable to use for document elements
 const scheduleBody = document.querySelector('#user-player-grid-schedule-body');
-
-//Rewriting functions to use mock data for testing
-function getGamesForWeek(player, date) {
-    const week = getWeekFromDate(date);
-    const weekForSchedule = week.map(day => formatDateForSchedule(day));
-    const teamSchedule = testSchedule;
-    return teamSchedule.filter(game => weekForSchedule.find(weekdate => game.homeStartDate === weekdate))
-}
-
-function getNumGamesForWeek(player, date) {
-    const games = getGamesForWeek(player, date);
-    return games.length
-}
-
-function getNumWeekGamesRemaining(player, date) {
-    const games = getGamesForWeek(player, date);
-    const week = getWeekFromDate(date);
-    const remainingWeek = week.filter(day => day > date)
-    const remainingWeekForSchedule = remainingWeek.map(day => formatDateForSchedule(day))
-    const remainingGames = games.filter(game => remainingWeekForSchedule.find(weekdate => game.homeStartDate === weekdate));
-    return remainingGames.length
-}
-
-function populateGameCells(player, date, teamData, table) {
-    const games = getGamesForWeek(player, date);
-    const week = getWeekFromDate(date);
-    const scheduleWeek = week.map(day => formatDateForSchedule(day));
-    scheduleWeek.forEach((scheduleDay, dayNum) => {
-        const scheduledGame = games.find(game => game.homeStartDate === scheduleDay);
-        if (scheduledGame) {
-            const gameCell = table.querySelector(`#player-${player.ID}-day-${dayNum}`);
-            const opponent = (scheduledGame.isHomeTeam ? 
-                    getTeamData(scheduledGame.vTeam.teamId, teamData).initials :
-                    '@' + getTeamData(scheduledGame.hTeam.teamId, teamData).initials 
-                );
-            gameCell.innerText = opponent;
-        }
-    })
-}
 
 describe('getGamesForWeek returns an array of game info for the games the player will play during the week of the date passed', function() {
     it('Returns 4 game objects from the test data for the week of 4/26/2021', function() {

@@ -414,3 +414,13 @@ def get_opp_team_players(opp_team_id):
     name = opp_team.name
     players = [player.player_id for player in opp_team.players]
     return jsonify(name=name, players=players)
+
+# Route for running JS tests for API methods
+@app.route('/test-api')
+def show_api_tests():
+    # Only show this route if the user is logged in with the admin account
+    if session['user']['username'] == 'admin':
+        return render_template('test-api-results.html')
+    else:
+        flash('You are not authorized to see that page')
+        return redirect('root_redirect')
