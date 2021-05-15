@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     const teamData = await getAllTeams();
     const players = getPlayers(playerData, teamData);
     const today = new Date();
-    const thursday = new Date();
-    thursday.setDate(today.getDate() - 3);
 
     const pickupSearchBar = document.querySelector('#pickup-player-search-bar');
     const pickupResults = document.querySelector('#pickup-player-search-results');

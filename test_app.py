@@ -57,9 +57,10 @@ class TestRoutes(TestCase):
         """Rollback any transaction that didn't get committed"""
         db.session.rollback()
 
-    def test_root_redirect(self):
+    # TODO: TEST NEW WELCOME SCREEN
+    def test_show_welcome(self):
         """
-        First, test that this route takes you to the login page by default.
+        First, test that this route takes you to the welcome page by default.
         Then, with a user in session, test that you're redirected to your user hub.
         """
         with app.test_client() as client:
@@ -68,7 +69,7 @@ class TestRoutes(TestCase):
             html1 = response1.get_data(as_text=True)
 
             self.assertEqual(response1.status_code, 200)
-            self.assertIn('<h1>Log In</h1>', html1)
+            self.assertIn('A set of tools to help you win your NBA fantasy basketball league.', html1)
 
             #Testing redirect to user hub when user is in session
             with client.session_transaction() as sess:

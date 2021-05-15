@@ -387,6 +387,19 @@ def show_pickup_analyzer():
         flash('Please log in first.')
         return redirect(url_for('show_login_form'))
 
+@app.route('/help')
+def show_help():
+    """
+    If the user is logged in, show the help screen
+    """
+    #Check that user is logged in
+    if 'user' in session:
+        user = User.query.get(session['user']['username'])
+        return render_template('help.html', user=user)
+    else:
+        flash('Please log in first.')
+        return redirect(url_for('show_login_form'))
+
 @app.route('/data/<username>/teams')
 def get_user_teams(username):
     """

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}
+FB Assistant help
+{% endblock %}
+
+{% block content %}
+<h1>Using the Fantasy Basketball Assistant</h1>
+<hr>
+<h4>Table of Contents</h4>
+<ul>
+    <li><a href="#quick-start">Quick start guide</a></li>
+    <li><a href="#building-teams">Building a team</a></li>
+    <li><a href="#opposing-teams">Opposing teams</a></li>
+    <li><a href="#team-projections">Team projections</a></li>
+    <li><a href="#trade-analyzer">Analyzing Trades</a></li>
+    <li><a href="#pickup-analyzer">Analyzing Pickups</a></li>
+</ul>
+
+
+<hr>
+
+<h3 id="quick-start">Quick Start</h3>
+<p>Got one fantasy basketball team and you want to do some quick projections with it? Start here:</p>
+<ul>
+    <li><a href="{{url_for('show_team_builder', username=user.username)}}">Build your team.</a> Add all of your players so your team in this app matches the one you're playing with.</li>
+    <li>From your team page, click <strong>Get Projections</strong> to see how your team will perform this week.</li>
+    <li>To project how your team will do against your opponent, click <strong>Add opposing team</strong> on the right-hand side of the projection view. Build your opponent's team to have the same players it has right now. Then, return to the projection view for your team, and choose your opponent's team from the menu underneath the right-hand stats table.</li>
+    <li>Time to make a trade? Go to the <a href="/trade-analyzer">Trade Analyzer</a> and see how your wildest trade ideas will change your team's output.</li>
+    <li>Looking for which player you should pick up or drop? Go to the <a href="/pickup-analyzer">Pickup Analyzer</a> and see how making a move today could affect the rest of your week.</li>
+</ul>
+<p><a href="#">Back to top</a></p>
+<hr>
+
+<h3 id="building-teams">Building a team</h3>
+<img class="w-50 border border-warning mt-3 d-block" src="/static/example-team.png" alt="Example team builder">
+<p class="mb-3"><small><em>An example team</em></small></p>
+<p><strong>The first thing you should do as a user is create a team.</strong></p> 
+<p>The best way to use this app is to build the same team(s) you're playing with in your official fantasy league this year. Add all of the same players you have on your team. Then, you can use the rest of the tools to project how that team will perform.</p>
+<p>Obviously, fantasy team rosters change all of the time. To update your team when you make changes, go to your team's page from the menu or your homepage, and choose "Edit team". You can also delete teams from this page.</p>
+<p>Adding a league name is optional - add it if it helps you remember the name of the league that your team is playing in!</p>
+<p><a href="{{url_for('show_team_builder', username=user.username)}}">Add a new team here.</a></p>
+<p><a href="#">Back to top</a></p>
+<hr>
+
+<h3 id="opposing-teams">Opposing teams</h3>
+<p>Projecting your own team's stats is great, but let's be real: you want to win your matchup every week. And to do that, you need to know how your team stacks up against your opponent.</p>
+<p>You can create the other teams you'll be playing against in your league in order to project their stats. Opposing teams will be connected to your team, and visible from your team's page. When you get your team's weekly projection, you can choose one of that team's opponents to get their projected stats and compare.</p>
+<p>To create an opposing team, first go to your team's page. Then, at the bottom of the page, click "Add opposing team." Once you're done, that team's name will appear underneath your team's players on your team page. To edit one of your opponent's teams, click on the name of the team from your team page, and then choose "Edit Team".</p>
+<p>For quick access, buttons to add and/or edit an opposing team are present on the team projection pages also.</p>
+<p><a href="#">Back to top</a></p>
+<hr>
+
+<h3 id="team-projections">Team projections</h3>
+<img class="w-50 border border-warning mt-3 d-block" src="/static/example-projection.png" alt="Example projections">
+<p class="mb-3"><small><em>Example team projections</em></small></p>
+<p>This is probably what you're here for - to project how your fantasy team will do this week against your opponent!</p>
+<p><strong>To access team projections,</strong> go to your team's page from the top menu or from your homepage. Then, click the "Team projections" button.</p>
+<p>When you arrive at the projections page, you'll see projected total stats for the <strong>current week</strong> for your team. Projected stats are calculated by finding the number of games each player plays that week based on the NBA schedule, and multiplying each player's per-game averages by the number of games they are scheduled to play.</p>
+<p><strong>To project your team's stats against an opponent,</strong> first <a href="#opposing-teams">create an opposing team</a> for the team you're projecting. Then, from the menu underneath the "Opponent Team" table, choose the name of the opponent team you created.</p>
+<p><strong>To project your stats for a different week,</strong> choose a date from the input at the top of the page. When you choose a date, both team's projections will be updated to the week of the date you chose.</p>
+<p><strong>At the bottom of the page, you can find projections for individual players and view their schedule for the week:</strong></p>
+<img class="w-50 border border-warning mt-3 d-block" src="/static/example-grid.png" alt="Example player stat grid">
+<p class="mb-3"><small><em>Example player projections</em></small></p>
+<p>Use the buttons to switch between player projections for your team and your opponent, and between viewing stats and viewing the schedule. This allows you to get a deep dive into how your team will perform during the week.</p>
+<p><a href="#">Back to top</a></p>
+<hr>
+
+<h3 id="trade-analyzer">Analyzing Trades</h3>
+<img class="w-50 border border-warning mt-3 d-block" src="/static/example-trade.png" alt="Example trade">
+<p class="mb-3"><small><em>An example trade</em></small></p>
+<p>The trade analyzer tool allows you to directly compare the stats of two sets of players. This allows you to see how your team's stats could change per-game if your were to trade players on your team for players from opposing teams.</p>
+<p>Use the search bars to add players to the trade you want to analyze. The left side will be the players you're giving up, and the right side will be the players you're adding.</p>
+<p>Click <strong>Analyze Trade</strong> to get the results.</p>
+<img class="w-50 border border-warning mt-3 d-block" src="/static/example-trade-result.png" alt="Example trade results">
+<p class="mb-3"><small><em>Example trade results</em></small></p>
+<p>The top table shows the total per-game stats you'll be losing from the players you're giving away.</p>
+<p>The second table shows the total per-game stats you'll be gaining from the players you're adding.</p>
+<p>The bottom table shows the net difference in stats for your team after the trade is done. Green stats are increasing, and red stats are decreasing. (Note: FG% and FT% changes may not represent the total change to your team, since different players shoot at different volumes. The differences here simply represents the total differences between the two sets of playes you've set up.)</p>
+<p>This tool only gives per-game projections because trades tend to be long-term changes, so you're most likely not going to be making a trade just to see how your stats will change for the current week. To see how a trade might affect your current week, edit your team or create a new team that would represent your team after the trade, and compare the results to your current team.</p>
+<a href="/trade-analyzer">Go to the trade analyzer here.</a>
+<p><a href="#">Back to top</a></p>
+<hr>
+
+<h3 id="pickup-analyzer">Analyzing pickups</h3>
+<img class="w-50 border border-warning mt-3 d-block" src="/static/example-pickup.png" alt="Example pickup results">
+<p class="mb-3"><small><em>Example pickup results</em></small></p>
+<p>Use the pickup analyzer to see how your team's stats might change if you decide to drop a player from your team, add a player to your team, or both.</p>
+<p>Choose a player to drop on the left-hand side of the tool. You must choose a player from a team you've built already, so that we can analyze how your total team projections might change.</p>
+<p>Choose a player to add on the right-hand side. This can be any player, since the tool does not know who is available in your league. Type into the search bar to make your choice.</p>
+<p>Pickups are often made during a fantasy basketball week in order to acquire more players who are playing games that week. For that reason, the tool shows a <strong>per-game comparison</strong> and a <strong>rest-of-week comparison</strong> table.</p>
+<p>The <strong>per-game comparison</strong> simply shows the differences in each player's average per-game stats.</p>
+<p>The <strong>rest-of-week comparison</strong> shows how many games each player is playing this week <strong>after the current day,</strong> and multiplies their stats by that number of games. This allows you to account for the number of games that each player is playing for the rest of the week if you pick them up today. Sometimes, a worse player playing more games can put up more total stats than a better player with less games!</p>
+<img class="w-25 border border-warning mt-3 d-block" src="/static/example-pickup-totals.png" alt="Example pickup results">
+<p class="mb-3"><small><em>Example pickup total results</em></small></p>
+<p>Lastly, the table at the bottom shows how your team's total performance might change for the rest of the week if you made the pickup right now. The numbers appended represent the difference in stats - stats in green are positive increases, and stats in red are negative decreases.</p>
+<a href="/pickup-analyzer">Go to the pickup analyzer here.</a>
+<p><a href="#">Back to top</a></p>
+{% endblock %}
