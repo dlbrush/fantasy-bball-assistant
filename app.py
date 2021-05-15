@@ -14,20 +14,20 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
 
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
 
 categories = [('gp', 'GAMES'), ('fgp', 'FG%'), ('ftp', 'FT%'), ('tpg', '3PM'), ('rpg','REB'), ('apg', 'AST'), ('spg', 'STL'), ('bpg', 'BLK'), ('topg', 'TOS'), ('ppg', 'PTS')]
 days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
 @app.route('/')
-def root_redirect():
+def show_welcome():
     """
     If the user is logged in already, redirect to their user hub.
-    If not, redirect to the login screen.
+    If not, show the welcome page.
     """
     if 'user' in session:
         return redirect(url_for('show_user_hub', username=session['user']['username']))
-    return redirect(url_for('show_login_form'))
+    return render_template('welcome.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def show_login_form():
