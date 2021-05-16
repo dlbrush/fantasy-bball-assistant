@@ -159,7 +159,7 @@ class playerSearch {
             const playerId = evt.target.id.substr(7);
             const playerBlock = document.querySelector(`#block-${playerId}`);
             playerBlock.remove();
-            const option = document.querySelector(`option[value="${playerId}"]`);
+            const option = this.playerSelect.querySelector(`option[value="${playerId}"]`);
             option.removeAttribute('selected');
             this.selectedPlayers.delete(playerId);
         }

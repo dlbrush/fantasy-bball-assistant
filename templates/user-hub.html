@@ -9,9 +9,9 @@
 <h1>Welcome, {{user.username}}!</h1>
 <p>How's your season going?</p>
 
-<h3>Your teams:</h3>
+<h3>Your teams</h3>
 <hr>
-<a class="my-2" href="{{user.username}}/addteam">Add a new team</a>
+<a class="my-2 btn btn-primary" href="{{user.username}}/addteam">Add a new team</a>
 <div class="row my-2" id="teams">
 
     {% for team in teams %}

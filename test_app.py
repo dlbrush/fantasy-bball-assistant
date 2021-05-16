@@ -57,7 +57,6 @@ class TestRoutes(TestCase):
         """Rollback any transaction that didn't get committed"""
         db.session.rollback()
 
-    # TODO: TEST NEW WELCOME SCREEN
     def test_show_welcome(self):
         """
         First, test that this route takes you to the welcome page by default.
@@ -462,6 +461,20 @@ class TestRoutes(TestCase):
 
             self.assertEqual(response.status_code, 200)
             self.assertIn('<h1>Pickup Analyzer</h1>', html)
+
+    def test_show_help(self):
+        """
+        Test that when the user is logged in, the help screen shows.
+        """
+        with app.test_client() as client:
+            with client.session_transaction() as sess:
+                sess['user'] = self.user.serialize()
+            
+            response = client.get('/help')
+            html = response.get_data(as_text=True)
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('<h1>Using the Fantasy Basketball Assistant</h1>', html)
 
     def test_get_user_teams(self):
         """
