@@ -2,12 +2,23 @@ from flask import Flask, render_template, redirect, url_for, flash, session, req
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 import os
+import re
 
 from models import db, connect_db, User, Team, OpponentTeam
 from forms import UserForm, TeamBuilderForm, OppTeamBuilderForm
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///fantasy_bball_assistant')
+
+#Set the database location based on the environment
+uri = os.getenv("DATABASE_URL") 
+app.config['SQLALCHEMY_DATABASE_URI'] = None
+if uri:
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///fantasy_bball_assistant'
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'giannis4MVP')
