@@ -1,15 +1,20 @@
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+import os
+
+# use secret key in production or default to our dev one
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shh')
 
 from models import db, connect_db, User, Team, OpponentTeam
 from forms import UserForm, TeamBuilderForm, OppTeamBuilderForm
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///fantasy_bball_assistant"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'postgresql:///fantasy_bball_assistant')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
-app.config["SECRET_KEY"] = "giannis4MVP"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'giannis4MVP')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
