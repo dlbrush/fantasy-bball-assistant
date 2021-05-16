@@ -3,7 +3,7 @@
  * @returns {Promise} When fulfilled, returns array of player objects
  */
 async function getAllPlayers() {
-    response = await axios.get(`http://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players.json`);
+    response = await axios.get(`https://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players.json`);
     return response.data['league']['standard'];
 }
 
@@ -12,7 +12,7 @@ async function getAllPlayers() {
  * @returns {Promise} When fulfilled, returns array of team objects
  */ 
 async function getAllTeams() {
-    response = await axios.get('http://data.nba.net/data/10s/prod/v1/current/standings_all.json');
+    response = await axios.get('https://data.nba.net/data/10s/prod/v1/current/standings_all.json');
     return response.data['league']['standard']['teams'];
 }
 
@@ -22,7 +22,7 @@ async function getAllTeams() {
  * @returns {Promise} When fulfilled, returns array of game objects
  */ 
 async function getTeamSchedule(teamCode) {
-    response = await axios.get(`http://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/teams/${teamCode}/schedule.json`);
+    response = await axios.get(`https://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/teams/${teamCode}/schedule.json`);
     return response.data['league']['standard']
 }
 
@@ -32,7 +32,7 @@ async function getTeamSchedule(teamCode) {
  * @returns {Promise} When fulfilled, returns an object of player stats
  */
 async function getPlayerSeasonStats(playerId) {
-    response = await axios.get(`http://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players/${playerId}_profile.json`);
+    response = await axios.get(`https://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players/${playerId}_profile.json`);
     return response.data['league']['standard']['stats']['latest']
 }
 
