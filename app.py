@@ -20,7 +20,7 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///fantasy_bball_assistant'
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ECHO"] = True
+app.config["SQLALCHEMY_ECHO"] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'giannis4MVP')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
