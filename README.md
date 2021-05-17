@@ -1,4 +1,8 @@
 # Fantasy Basketball Assistant
+## Table of Contents
+- [Summary](#summary)
+    - [Production Link](production-link)
+
 ## Summary
 This Fantasy Basketball Assistant is designed to help NBA fantasy basketball managers make decisions about their teams. The app pulls game schedule and statistical data from the NBA Data API and makes basic projections of the total production of a set of players for a given week. It also compares stats between players to help managers plan trades and pickups.
 
@@ -42,8 +46,16 @@ The production version of this app is deployed at [https://fantasy-bball-assista
 ## Key Features
 ### Team Projections
 
-## Testing
-
+## Tech Details
 
 ### API Information
 I am using the NBA Data API for player stats and NBA schedule data. Documentation on how to use this API can be found [here](https://github.com/kashav/nba.js/blob/master/docs/api/DATA.md).
+
+The front-end of this app also makes HTTPS calls to the server to get database information about teams and players.
+1. The 
+### Testing
+
+### Standard player data flow
+
+### Implementing the Player Search bar
+
