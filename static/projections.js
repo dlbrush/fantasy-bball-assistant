@@ -89,15 +89,14 @@ document.addEventListener("DOMContentLoaded", async function() {
         const oppId = parseInt(evt.target.value);
         if (oppId) {
             document.querySelector('#team-switch').classList.remove('hide');
-            await getOpponentProjection(oppId, userTeamId, players, teamData, today);
+            const dateValue = document.querySelector('#pick-date').value;
+            const date = new Date(dateValue);
+            await getOpponentProjection(oppId, userTeamId, players, teamData, date);
         }
     }
 
     async function projectFromDate(evt) {
         const date = new Date(evt.target.value);
-        console.log(evt.target.value);
-        console.log(date);
-        console.log(date.getUTCDate());
         populateScheduleCells(date);
         await getTeamProjections(userTeamPlayers, date, 'user', teamData);
         if (oppSelect.value) {
