@@ -175,9 +175,11 @@ Then, the user can choose a player to add from any player. The app cannot know w
 
 Both choices are restricted to only one player, as opposed to multiple like the Trade Analyzer. These transactions are always one-off in the context of a real fantasy league. If the user already has a full roster, they need to drop a player to pick one up, so picking up and dropping a player at the same time is extremely common.
 
+Lastly, at the top of the page, the user can pick a date to project from.
+
 The analysis shows a per-game comparison, rest-of-week comparison, and weekly team projection. 
 - The per-game comparison simply shows the per-game statistics for each player and shows a comparison if the user is picking up and dropping a player. 
-- The rest-of-week comparison uses the current date and the schedule data to determine each player's projected total statistics for the rest of the current week. This works similar to the team projection by multiplying each player's per-game average statistics by the number of games they play after the current date. Again, if a player is being picked up and another is being dropped, we show a comparison.
+- The rest-of-week comparison uses the date input at the tp of the screen and the schedule data to determine each player's projected total statistics for the rest of the week after the input date. This works similar to the team projection by multiplying each player's per-game average statistics by the number of games they play after the current date. Again, if a player is being picked up and another is being dropped, we show a comparison.
 - If the user has chosen one of their teams in the input, then we show a weekly team projection based on the user's entire team for the rest of the week if they were to make the transaction. A number is appended to the table to show the difference between the user's current team and their team after the transaction.
 
 ![Example projection table](static/example-pickup-totals.png)
@@ -194,7 +196,7 @@ The analysis shows a per-game comparison, rest-of-week comparison, and weekly te
         1. Get player info for the chosen player and call `analyzePickupSide`, which does the following:
         2. Populate player info for both comparison tables.
         3. Get the per-game stats for the player by calling `getPlayerTotals` wwith a `numGames` value of 1.
-        4. Then, get the number of games the player is playing in the rest of the week by passing the current date and the player to `getNumWeekGamesRemaining`. This function looks at the schedule for the current week and determines which games occur after today's date. 
+        4. Then, get the number of games the player is playing in the rest of the week by passing the input date and the player to `getNumWeekGamesRemaining`. This function looks at the schedule for the current week and determines which games occur after today's date. 
         5. Get the player's total projected stats for the rest of the week by calling `getPlayerTotals` with the `numGames` value set to the value returned by `getNumWeekGamesRemaining`.
         6. Map both sets of stats to the tables. Cache the per-game stats and rest-of-week stat totals returned by `analyzePickupSide` for use later.
     3. If the user chose a player to pick up:
@@ -207,16 +209,15 @@ The analysis shows a per-game comparison, rest-of-week comparison, and weekly te
     5. If the user selected a team:
         1. Show the total team projection table.
         2. Get the player IDs associated with the team from the database using `getUserTeamPlayerIds` and make an array of player data.
-        3. Pass this list and today's date to `getTeamTotals` to get the total weekly stat projection for this week for the team as it stands now. Cache this as `currentTeamTotals`.
+        3. Pass this list and the date in the input to `getTeamTotals` to get the total weekly stat projection for the projection week for the team as it stands now. Cache this as `currentTeamTotals`.
         4. Get the difference between the weekly stats, subtracting the dropped player from the picked up player. Add this difference to the total stats using `addStats` and cache as `newTeamTotals`.
         5. Set the `fgp` and `ftp` properties of `newTeamTotals` to be the percentage of free throws and field goals made TOTAL, instead of the difference we got back from `addStats`. This allows us to account for the realistic difference in shooting percentages the user will experience based on the volume of shots the players in the transaction take. The raw values returned from `addStats` will not make sense.
         5. In the totals table, map the `newTeamTotals`.
         6. Use `addDiffToTable` to append the difference between `currentTeamTotals` and `newTeamTotals` to the table cells. Show a positive change in green, and a negative change in red.
     
 #### Future feature ideas/current limitations
-- It would possibly be helpful to allow the user to project the rest of the week from any given date, not just today's date.
 - In some distant future where I can read data from the user's league, having a realistic waiver wire list for the user to choose from would be great.
-- I'm not sure if this is the tool where it should be included, but having some way to identify hot pickups for the user based on statistics would be very helpful.
+- I'm not sure if this is the tool where it should be included, but having some way to identify hot pickups for the user based on statistics would be a helpful feature.
 
 ## Tech Details
 

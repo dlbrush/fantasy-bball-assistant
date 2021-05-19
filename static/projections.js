@@ -12,7 +12,13 @@ document.addEventListener("DOMContentLoaded", async function() {
     //Get the date and populate the date in the schedule
     const today = new Date();
     populateScheduleCells(today);
-    document.querySelector('#pick-date').valueAsNumber = Date.now();
+
+    // Set the default value of the date input to today's date. 
+    //Because Date.now() returns  the UTC date, to get the user's local date first we need to calculate the timezone offset in MS
+    const todayMS = Date.now();
+    const timeZoneOffsetMS = today.getTimezoneOffset() * 60000;
+    const dateAsNumber = todayMS - timeZoneOffsetMS;
+    document.querySelector('#pick-date').valueAsNumber = dateAsNumber;
 
     //Get projections for the user's team
     await getTeamProjections(userTeamPlayers, today, 'user', teamData);
