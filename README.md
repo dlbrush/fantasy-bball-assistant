@@ -11,7 +11,7 @@
     - [Team Projections](#team-projections)
     - [Trade Analyzer](#trade-analyzer)
     - [Pickup Analyzer](#pickup-analyzer)
-- [Tech Details](#tech-details)
+    - [Tech Details](#tech-details)
     - [API Information](#api-information)
     - [Testing](#testing)
     - [Standard player data flow](#standard-player-data-flow)
@@ -61,7 +61,7 @@ The production version of this app is deployed at [https://fantasy-bball-assista
 ## Key Features
 
 ### Team Builder
-![Example team](static/example-team.png)
+![Example team](static/images/example-team.png)
 
 The team builder allows the user to recreate their fantasy team in this app, choosing from all players who have played in the current NBA season based on the NBA API database.
 
@@ -76,7 +76,7 @@ The team builder functionality works the same when the user is building their ow
 4. When the form is submitted, the team name and league name are stored as an entry in the database. Each player chosen is associated with the team in the database, identified by their API player ID.
 
 ### Team Projections
-![Example projection](static/example-projection.png)
+![Example projection](static/images/example-projection.png)
 This is the most important feature of the app.
 
 In the head to head format, fantasy basketball matches typically last a week. Over the course of that week, players play a varying number of games depending on the NBA schedule. The winner of the matchup is the manager whose team performs the best over the week in the majority of the 9 categories, based on the games played by the players on the team in that week. The 9 categories are as follows:
@@ -92,7 +92,7 @@ In the head to head format, fantasy basketball matches typically last a week. Ov
 
 This feature makes a simple projection for the player's team performance for a total week based on each player's per-game statistics in each category, multiplied by the number of games they play in that week based on the schedule data we get from the API. It displays the total team stats as well as the stats for all individual players. It also shows the total number of games played by each player and their schedule and opponents for the week.
 
-![Example player projection](static/example-grid.png)
+![Example player projection](static/images/example-grid.png)
 
 On page load, this feature makes a projection for the team the user has chosen to get projections for for the current week based on the current date. If the user would like to get projections for a different week, the user can choose a date from the top of the page. This is useful when the user is looking ahead to next week's matchup.
 
@@ -138,13 +138,13 @@ The user can also view projections for an opposing team if they would like to pr
 - Allow the user to make projections based on statistics for more recent periods of time than the whole year. For example, the user could have a player on their team who has been hot for the last week but was not playing before that - they may want to get projections based on statistics from the previous 2 weeks, not just the entire year where his averages would be much lower. Currently, I can't get game-by-game statistics from the NBA Data API, and the NBA does not break up it's statistical data by periods of time, so I don't have an easy way of calculating this.
 
 ### Trade Analyzer
-![Example trade](static/example-trade.png)
+![Example trade](static/images/example-trade.png)
 
 In fantasy basketball, you can trade players on your team with players on another team if both sides agree to make a trade. That's a big decision to make! So, the trade analyzer tool allows the user to compare the total per-game statistics of two sets of players to see the potential impact of a trade.
 
 The user chooses which players they will give in the trade, and then which players they want to receive. When they click "Analyze Trade", they'll see a statistical comparison.
 
-![Example trade results](static/example-trade-result.png)
+![Example trade results](static/images/example-trade-result.png)
 
 This feature only compares per-game statistics because a trade is typically a long-term decision. The user will most likely be interested in comparing the total incoming stats to the outgoing stats, but not so much in the impact to their current weekly matchup. So, we display total per-game stats for each side of the trade and show the net difference in statistics between the two sets of players when the stats given are subtracted from the stats received.
 
@@ -163,7 +163,7 @@ This feature only compares per-game statistics because a trade is typically a lo
 - If the user wants to only select from players on their team and/or their opponents that they've already stored in the database, it should be easier to do so. I could add a selection input for players given that only picks players from the team the user chooses, and then populate a list of oppposing teams for that team and create a select input for the players on those teams as well. This would allow the user to more easily adjust their trades based on the real teams in their league.
 
 ### Pickup Analyzer
-![Example pickup analysis](static/example-pickup.png)
+![Example pickup analysis](static/images/example-pickup.png)
 
 In Fantasy Basketball, you are always able to drop players on your team and pick up players from the "waiver wire", which is the list of all NBA players that are not currently on a fantasy team in your league. This allows you to adjust your team in a few ways, like replacing underperforming players, or getting a player who produces different statistics than a player you have so that you can win a different category. Some players even use a tactic called "streaming" to pick up a new player every day who will be playing on that day of the NBA schedule and dropping a player who isn't playing, allowing them to maximize the number of games their players are playing over the course of the week. Usually, there is a set number of pickups that a manager is allowed to make in a week.
 
@@ -182,7 +182,7 @@ The analysis shows a per-game comparison, rest-of-week comparison, and weekly te
 - The rest-of-week comparison uses the date input at the tp of the screen and the schedule data to determine each player's projected total statistics for the rest of the week after the input date. This works similar to the team projection by multiplying each player's per-game average statistics by the number of games they play after the current date. Again, if a player is being picked up and another is being dropped, we show a comparison.
 - If the user has chosen one of their teams in the input, then we show a weekly team projection based on the user's entire team for the rest of the week if they were to make the transaction. A number is appended to the table to show the difference between the user's current team and their team after the transaction.
 
-![Example projection table](static/example-pickup-totals.png)
+![Example projection table](static/images/example-pickup-totals.png)
 
 #### How it works
 1. [Get player data](#standard-player-data-flow).
