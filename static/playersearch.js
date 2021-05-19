@@ -1,5 +1,18 @@
+
 class playerSearch {
 
+    /**
+     * The playerSearch class takes player data and a set of HTML elements and creates a search bar that autocompletes with real player names based on what the user has typed. The user clicks a name from the suggestions underneath the bar to select players for whatever feature they are using. Clicking a name selects an option from a hidden `<select>` element, which is used to send player ID lists to the database or create lists of players for analysis.
+     * 
+     * @param {HTMLElement} searchBar A text input element. This is where the user types their search terms.
+     * @param {HTMLElement} results A div element that lives underneath the search bar. When the user focuses on the search bar, this element appears. The playerList is a child of this element.
+     * @param {HTMLElement} playerList A ul element that is a child of the results div. This is where the list of matching player names is populated.
+     * @param {HTMLElement} container A div that contains the searchBar, results, and playerList elements.
+     * @param {Object[]} players An array of all player data objects that comes from getPlayers.
+     * @param {HTMLELement} targetList A div that will contain the info of the players selected from this bar. Populated by "player blocks", divs containing the player's name, position, team, and picture.
+     * @param {Number} targetColumns The number of bootstrap columns that the div for the selected player's info should fill. Use 6 for two-column targetLists, and 12 for a single-column list.
+     * @param {HTMLELement} playerSelect The hidden <select> element where the selected players are tracked.
+     */
     constructor(searchBar, results, playerList, container, players, targetList, targetColumns, playerSelect) {
         this.searchBar = searchBar;
         this.results = results;
