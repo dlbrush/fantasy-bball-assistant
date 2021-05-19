@@ -35,7 +35,6 @@ async function getPlayerSeasonStats(playerId) {
     response = await axios.get(`https://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players/${playerId}_profile.json`);
     const seasons = response.data['league']['standard']['stats']['regularSeason']['season'];
     const currentSeasonStats = seasons.find(season => season.seasonYear === getCurrentSeason());
-    console.log(currentSeasonStats)
     return currentSeasonStats.total
 }
 
