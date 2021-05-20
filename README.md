@@ -263,6 +263,10 @@ When testing any of these files on an HTML page, `mock-functions.js` needs to be
 
 **To run these tests**, just open `test-results.html` in the static directory via the file protocol in your browser. The Jasmine CSS and HTML should show the results of the tests in all 5 files. The HTML in this file should have mock versions of all of the HTML elements needed for the functions to pass the tests and operate as they would in the app.
 
+Not tested:
+- Event listeners specific to certain views
+- DOMContentLoaded callback functions that run when each view is loaded
+
 **JavaScript HTTP tests**
 
 In order to test `api.js`, we need to be running the Flask server locally to access the routes that require the database. These tests are located in `test-api.js` and are run in the `test-api-results.html` file in the templates directory. Here's how to run the tests:

@@ -1,0 +1,530 @@
+{
+  "canvas": {
+    "width": 2000,
+    "height": 2000,
+    "scrollTop": 11,
+    "scrollLeft": 0,
+    "show": {
+      "tableComment": false,
+      "columnComment": false,
+      "columnDataType": true,
+      "columnDefault": false,
+      "columnAutoIncrement": false,
+      "columnPrimaryKey": true,
+      "columnUnique": true,
+      "columnNotNull": true,
+      "relationship": true
+    },
+    "database": "MySQL",
+    "databaseName": "bballassistant",
+    "canvasType": "ERD",
+    "language": "GraphQL",
+    "tableCase": "pascalCase",
+    "columnCase": "camelCase",
+    "setting": {
+      "relationshipDataTypeSync": false,
+      "columnOrder": [
+        "columnName",
+        "columnDataType",
+        "columnNotNull",
+        "columnAutoIncrement",
+        "columnUnique",
+        "columnDefault",
+        "columnComment"
+      ]
+    }
+  },
+  "table": {
+    "tables": [
+      {
+        "name": "users",
+        "comment": "",
+        "columns": [
+          {
+            "name": "username",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": true,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "8b803208-4977-28ae-3a7f-dde3476db489"
+          },
+          {
+            "name": "password",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "ec0d39b6-9b8b-6a55-b409-1610a44b833b"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 51,
+          "top": 79,
+          "zIndex": 254,
+          "widthName": 60,
+          "widthComment": 60
+        },
+        "id": "6236aa81-1a03-5f53-262b-0e2e3a7f4b26"
+      },
+      {
+        "name": "teams",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "2a72c7bf-c6e8-49f2-91cb-3cd8688503da"
+          },
+          {
+            "name": "name",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "388979c6-835c-7cf4-c9c0-f62520c6c3ef"
+          },
+          {
+            "name": "owner",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "56fba4c2-36b9-c64e-d676-b7a650f12ce5"
+          },
+          {
+            "name": "league_name",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 81,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "0d96f9c7-3d64-96d5-01c0-b7f8ebad4c20"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 40,
+          "top": 341,
+          "zIndex": 190,
+          "widthName": 60,
+          "widthComment": 60
+        },
+        "id": "16ee7e79-e84b-6e98-dad5-013f4f31b8e2"
+      },
+      {
+        "name": "teams_players",
+        "comment": "",
+        "columns": [
+          {
+            "name": "team_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": true,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "07b4d6a6-98de-193a-e796-19b967060da9"
+          },
+          {
+            "name": "player_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "649b1d22-1c1c-ebb0-41ac-7b6e7328818d"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 454,
+          "top": 456,
+          "zIndex": 253,
+          "widthName": 87,
+          "widthComment": 60
+        },
+        "id": "a84b2a6b-1f4a-dfef-8038-cdfc9a2c152e"
+      },
+      {
+        "name": "opponent_teams",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "1440a355-b0e9-2637-2f0f-560bb2c82f92"
+          },
+          {
+            "name": "plays_against",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 82,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "07ffbd6a-35ff-4a8a-09b8-a4089bb977f8"
+          },
+          {
+            "name": "name",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "66abbda2-1e63-a5c4-a73b-f0f85f98cfd3"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 433,
+          "top": 76,
+          "zIndex": 255,
+          "widthName": 99,
+          "widthComment": 60
+        },
+        "id": "3d954b56-93d2-714c-e59d-d77d987ac64c"
+      },
+      {
+        "name": "opponent_teams_players",
+        "comment": "",
+        "columns": [
+          {
+            "name": "opp_team_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": true,
+              "pfk": false,
+              "widthName": 77,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "1475d858-8b33-00ea-75ad-73d97496e4ef"
+          },
+          {
+            "name": "player_id",
+            "comment": "",
+            "dataType": "INTEGER",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": true,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": true,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "eadfaf88-e67a-91b0-043f-d543852928a1"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 438,
+          "top": 297,
+          "zIndex": 259,
+          "widthName": 148,
+          "widthComment": 60
+        },
+        "id": "852ead28-34a6-f0b8-4e6e-c4b8153919bc"
+      }
+    ],
+    "indexes": [
+      {
+        "name": "",
+        "columns": [],
+        "unique": false,
+        "id": "e80e53ac-6a16-cef2-cd4a-42819a12e6c2",
+        "tableId": "6236aa81-1a03-5f53-262b-0e2e3a7f4b26"
+      },
+      {
+        "name": "",
+        "columns": [],
+        "unique": false,
+        "id": "3a385a26-028c-7fb7-dbf2-2856590ba58a",
+        "tableId": "6236aa81-1a03-5f53-262b-0e2e3a7f4b26"
+      }
+    ]
+  },
+  "memo": {
+    "memos": []
+  },
+  "relationship": {
+    "relationships": [
+      {
+        "identification": false,
+        "start": {
+          "tableId": "6236aa81-1a03-5f53-262b-0e2e3a7f4b26",
+          "columnIds": [
+            "8b803208-4977-28ae-3a7f-dde3476db489"
+          ],
+          "x": 173,
+          "y": 189,
+          "direction": "bottom"
+        },
+        "end": {
+          "tableId": "16ee7e79-e84b-6e98-dad5-013f4f31b8e2",
+          "columnIds": [
+            "56fba4c2-36b9-c64e-d676-b7a650f12ce5"
+          ],
+          "x": 172.5,
+          "y": 341,
+          "direction": "top"
+        },
+        "id": "04b92374-5fef-8cca-b061-ca84e5495c8a",
+        "relationshipType": "ZeroN"
+      },
+      {
+        "identification": true,
+        "start": {
+          "tableId": "16ee7e79-e84b-6e98-dad5-013f4f31b8e2",
+          "columnIds": [
+            "2a72c7bf-c6e8-49f2-91cb-3cd8688503da"
+          ],
+          "x": 305,
+          "y": 454.25,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "a84b2a6b-1f4a-dfef-8038-cdfc9a2c152e",
+          "columnIds": [
+            "07b4d6a6-98de-193a-e796-19b967060da9"
+          ],
+          "x": 454,
+          "y": 511,
+          "direction": "left"
+        },
+        "id": "7b7ea23d-d22c-9c90-7248-56679efcbabd",
+        "relationshipType": "ZeroN"
+      },
+      {
+        "identification": false,
+        "start": {
+          "tableId": "16ee7e79-e84b-6e98-dad5-013f4f31b8e2",
+          "columnIds": [
+            "2a72c7bf-c6e8-49f2-91cb-3cd8688503da"
+          ],
+          "x": 305,
+          "y": 378.75,
+          "direction": "right"
+        },
+        "end": {
+          "tableId": "3d954b56-93d2-714c-e59d-d77d987ac64c",
+          "columnIds": [
+            "07ffbd6a-35ff-4a8a-09b8-a4089bb977f8"
+          ],
+          "x": 433,
+          "y": 141.25,
+          "direction": "left"
+        },
+        "id": "716eeb33-72d1-3204-812e-ce31ca6096b4",
+        "relationshipType": "ZeroN"
+      },
+      {
+        "identification": false,
+        "start": {
+          "tableId": "3d954b56-93d2-714c-e59d-d77d987ac64c",
+          "columnIds": [
+            "1440a355-b0e9-2637-2f0f-560bb2c82f92"
+          ],
+          "x": 566,
+          "y": 206.5,
+          "direction": "bottom"
+        },
+        "end": {
+          "tableId": "852ead28-34a6-f0b8-4e6e-c4b8153919bc",
+          "columnIds": [
+            "1475d858-8b33-00ea-75ad-73d97496e4ef"
+          ],
+          "x": 568.5,
+          "y": 297,
+          "direction": "top"
+        },
+        "id": "e090428e-aade-4b71-23f7-6f1976cd0cee",
+        "relationshipType": "ZeroN"
+      }
+    ]
+  }
+}
