@@ -11,7 +11,7 @@
     - [Team Projections](#team-projections)
     - [Trade Analyzer](#trade-analyzer)
     - [Pickup Analyzer](#pickup-analyzer)
-    - [Tech Details](#tech-details)
+- [Tech Details](#tech-details)
     - [API Information](#api-information)
     - [Testing](#testing)
     - [Standard player data flow](#standard-player-data-flow)
