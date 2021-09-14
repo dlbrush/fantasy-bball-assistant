@@ -108,8 +108,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             const restOfWeekDiff = getComparison(droppedPlayerWeekStats, pickupPlayerWeekStats);
             const newTeamTotals = addStats(currentTeamTotals, restOfWeekDiff);
-            newTeamTotals.fgp = roundToTenth(100 * newTeamTotals.fgmpg / newTeamTotals.fgapg);
-            newTeamTotals.ftp = roundToTenth(100 * newTeamTotals.ftmpg / newTeamTotals.ftapg);
+            newTeamTotals.fgp = roundToTenth(100 * newTeamTotals.fgmpg / newTeamTotals.fgapg) || 0;
+            newTeamTotals.ftp = roundToTenth(100 * newTeamTotals.ftmpg / newTeamTotals.ftapg) || 0;
             const totalCells = Array.from(document.querySelectorAll('.cat-user-total'));
             mapStatsToTable(totalCells, newTeamTotals);
             const totalDiff = getComparison(currentTeamTotals, newTeamTotals);

@@ -34,8 +34,11 @@ async function getTeamSchedule(teamCode) {
 async function getPlayerSeasonStats(playerId) {
     response = await axios.get(`https://data.nba.net/data/10s/prod/v1/${getCurrentSeason()}/players/${playerId}_profile.json`);
     const seasons = response.data['league']['standard']['stats']['regularSeason']['season'];
+    console.log(response.data);
+    console.log(getCurrentSeason());
     const currentSeasonStats = seasons.find(season => season.seasonYear === getCurrentSeason());
-    return currentSeasonStats.total
+    // Return empty object if currentSeasonStats not found
+    return currentSeasonStats ? currentSeasonStats.total : undefined;
 }
 
 /**
@@ -74,15 +77,15 @@ function getTeamIDFromURL(url) {
  * getCurrentSeason returns the current season based on the date.
  * Seasons start around September or October and end in May or June.
  * Seasons are identified by the year they start in.
- * So, if it's September or later, return the current year as the season.
- * If it's before September, we're still in the season identified by the previous year.
+ * So, if it's October or later, return the current year as the season.
+ * If it's before October, we're still in the season identified by the previous year.
  * @returns {Number} The year number for the current season
  */
  function getCurrentSeason() {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
-    if (month < 8) {
+    if (month < 9) {
         return year - 1
     } else {
         return year

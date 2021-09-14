@@ -1,4 +1,20 @@
-const CATEGORIES = ['gp', 'fgp', 'ftp', 'tpg', 'rpg', 'apg', 'spg', 'bpg', 'topg', 'ppg'];  
+const CATEGORIES = ['gp', 'fgp', 'ftp', 'tpg', 'rpg', 'apg', 'spg', 'bpg', 'topg', 'ppg'];
+const emptyStats = {
+    fgp: 0,
+    ftp: 0,
+    ppg: 0,
+    rpg: 0,
+    apg: 0,
+    spg: 0,
+    bpg: 0,
+    topg: 0,
+    gamesPlayed: 0,
+    tpg: 0,
+    fgmpg: 0,
+    fgapg: 0,
+    ftmpg: 0,
+    ftapg: 0
+};
 
 /**
  * Projects the total stats that a team will produce for the week of the date passed and maps their stats onto the tables in the projection view.
@@ -180,8 +196,9 @@ async function getTeamTotals(players, date, numGames) {
     }));
     let totals = {ppg: 0, rpg: 0, apg: 0, spg: 0, bpg: 0, topg: 0, tpg: 0, fgmpg: 0, fgapg: 0, ftmpg: 0, ftapg: 0}
     totals = playersToProject.reduce(addPlayerToTotal, totals);
-    totals.fgp = roundToTenth(100* totals.fgmpg/totals.fgapg);
-    totals.ftp = roundToTenth(100 * totals.ftmpg/totals.ftapg);
+    // Default percentages to 0 if returning NaN
+    totals.fgp = roundToTenth(100* totals.fgmpg/totals.fgapg) || 0;
+    totals.ftp = roundToTenth(100 * totals.ftmpg/totals.ftapg) || 0;
     totals.gp = playersToProject.reduce((total, nextPlayer) => {
         return total + nextPlayer.numProjectedGames
     }, 0);
@@ -249,18 +266,20 @@ function roundToTenth(number) {
 }
 
 /**
- * Takes an object of player stats from the API and returns only the stats relevant to fantasy basketball
+ * Takes an object of player stats from the API and returns only the stats relevant to fantasy basketball.
+ * Defaults to empty stats if passed undefined stat object
  * @param {Object} seasonStats Object of data from the API JSON for a player's profile
  * @returns {Object} Object containing relevant fantasy stats 
  */
-function getFantasyStats(seasonStats) {
+function getFantasyStats(seasonStats = emptyStats) {
     const {fgp, ftp, ppg, rpg, apg, spg, bpg, topg, gamesPlayed:gp} = seasonStats;
-    const tpg = roundToTenth(seasonStats.tpm/gp);
-    const fgmpg = roundToTenth(seasonStats.fgm/gp);
-    const fgapg = roundToTenth(seasonStats.fga/gp);
-    const ftmpg = roundToTenth(seasonStats.ftm/gp);
-    const ftapg = roundToTenth(seasonStats.fta/gp);
-    return {fgp, ftp, ppg, rpg, apg, spg, bpg, topg, gp, tpg, fgmpg, fgapg, ftmpg, ftapg}
+    // Default to 0 if gp is 0
+    const tpg = roundToTenth(seasonStats.tpm/gp) || 0;
+    const fgmpg = roundToTenth(seasonStats.fgm/gp) || 0;
+    const fgapg = roundToTenth(seasonStats.fga/gp) || 0;
+    const ftmpg = roundToTenth(seasonStats.ftm/gp) || 0;
+    const ftapg = roundToTenth(seasonStats.fta/gp) || 0;
+    return { fgp, ftp, ppg, rpg, apg, spg, bpg, topg, gp, tpg, fgmpg, fgapg, ftmpg, ftapg }
 }
 
 /**
